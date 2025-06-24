@@ -1,1 +1,725 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+  <title>Gemafusion - PWA Game</title>
+  
+  <!-- PWA Meta Tags -->
+  <link rel="manifest" href="./manifest.json">
+  <meta name="theme-color" content="#1a202c">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Gemafusion">
+  <link rel="apple-touch-icon" href="./icon-192.png">
+  
+  <style>
+    body {
+      background-color: #1a202c;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      color: white;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      padding: 10px;
+      box-sizing: border-box;
+      overflow-x: hidden;
+    }
+    .container {
+      width: 95vw;
+      max-width: 95vw;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      box-sizing: border-box;
+      min-height: 100vh;
+    }
+    .tile {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 12px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      background-size: contain;
+      background-position: center;
+      background-repeat: no-repeat;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      border: 2px solid rgba(79, 209, 197, 0.3);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+    .tile::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-size: contain;
+      background-position: center;
+      background-repeat: no-repeat;
+      z-index: 1;
+    }
+    .tile-text {
+      position: relative;
+      z-index: 2;
+      font-weight: bold;
+      text-shadow: 3px 3px 6px rgba(0,0,0,0.9);
+      color: white;
+      background: rgba(0,0,0,0.4);
+      padding: 4px 8px;
+      border-radius: 8px;
+      backdrop-filter: blur(4px);
+    }
+    .next-tile {
+      width: 100px;
+      height: 100px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 12px;
+      font-size: 24px;
+      margin-bottom: 15px;
+      background-size: contain;
+      background-position: center;
+      background-repeat: no-repeat;
+      border: 3px solid #4fd1c5;
+      font-weight: bold;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+      box-shadow: 0 0 20px rgba(79, 209, 197, 0.4);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 20px rgba(79, 209, 197, 0.4); }
+      50% { box-shadow: 0 0 30px rgba(79, 209, 197, 0.7); }
+    }
+    .tile.selected {
+      transform: scale(1.1);
+      box-shadow: 0 0 25px rgba(0, 255, 0, 0.8);
+      z-index: 10;
+      border-color: #00ff00;
+    }
+    .tile.merged {
+      animation: merge 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+    @keyframes merge {
+      0% { transform: scale(1); }
+      30% { transform: scale(1.5) rotate(5deg); }
+      60% { transform: scale(1.2) rotate(-3deg); }
+      100% { transform: scale(1) rotate(0deg); }
+    }
+    #gameBoard {
+      display: grid;
+      gap: 15px;
+      background: linear-gradient(135deg, #2d3748, #1a202c);
+      padding: 25px;
+      border-radius: 20px;
+      margin: 15px 0;
+      justify-content: center;
+      width: fit-content;
+      justify-self: center;
+      align-self: center;
+      border: 2px solid rgba(79, 209, 197, 0.2);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+    #optionsScreen, #gameScreen {
+      text-align: center;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    #optionsScreen {
+      display: flex;
+    }
+    #gameScreen {
+      display: none;
+    }
+    #optionsScreen select, #optionsScreen input {
+      margin: 10px;
+      padding: 15px;
+      font-size: 16px;
+      width: 250px;
+      border-radius: 12px;
+      border: 2px solid #4fd1c5;
+      background: linear-gradient(135deg, #2d3748, #1a202c);
+      color: white;
+      transition: all 0.3s ease;
+    }
+    #optionsScreen select:focus, #optionsScreen input:focus {
+      outline: none;
+      box-shadow: 0 0 15px rgba(79, 209, 197, 0.5);
+      transform: scale(1.02);
+    }
+    #optionsScreen button {
+      padding: 15px 30px;
+      font-size: 18px;
+      background: linear-gradient(45deg, #4fd1c5, #38b2ac, #319795);
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      color: white;
+      font-weight: bold;
+      margin: 15px;
+      transition: all 0.3s ease;
+      box-shadow: 0 6px 20px rgba(79, 209, 197, 0.3);
+    }
+    #optionsScreen button:hover {
+      transform: translateY(-2px) scale(1.05);
+      box-shadow: 0 10px 25px rgba(79, 209, 197, 0.5);
+    }
+    .game-stats {
+      display: flex;
+      justify-content: space-around;
+      width: 100%;
+      max-width: 450px;
+      margin: 20px 0;
+      gap: 10px;
+    }
+    .stat-item {
+      text-align: center;
+      background: linear-gradient(135deg, #2d3748, #1a202c);
+      padding: 15px;
+      border-radius: 12px;
+      min-width: 90px;
+      border: 1px solid rgba(79, 209, 197, 0.3);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+    .stat-label {
+      font-size: 13px;
+      color: #a0aec0;
+      margin-bottom: 5px;
+    }
+    .stat-value {
+      font-size: 20px;
+      font-weight: bold;
+      color: #4fd1c5;
+    }
+    .game-controls {
+      margin: 20px 0;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+    }
+    .control-btn {
+      padding: 12px 20px;
+      background: linear-gradient(135deg, #4a5568, #2d3748);
+      border: none;
+      border-radius: 10px;
+      color: white;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      border: 1px solid rgba(79, 209, 197, 0.3);
+    }
+    .control-btn:hover {
+      background: linear-gradient(135deg, #2d3748, #1a202c);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+    .loading-indicator {
+      display: none;
+      margin: 15px 0;
+      color: #4fd1c5;
+      font-weight: 500;
+    }
+    .loading-spinner {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 2px solid rgba(79, 209, 197, 0.3);
+      border-top: 2px solid #4fd1c5;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-right: 10px;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    h1 {
+      background: linear-gradient(45deg, #4fd1c5, #38b2ac, #319795);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-size: 2.8rem;
+      margin-bottom: 25px;
+      text-shadow: 0 0 30px rgba(79, 209, 197, 0.3);
+    }
+    .instructions {
+      background: linear-gradient(135deg, #2d3748, #1a202c);
+      padding: 20px;
+      border-radius: 15px;
+      margin: 25px 0;
+      border: 2px solid rgba(79, 209, 197, 0.2);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    }
+    .pwa-install {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: linear-gradient(45deg, #4fd1c5, #38b2ac);
+      color: white;
+      border: none;
+      padding: 12px 20px;
+      border-radius: 25px;
+      cursor: pointer;
+      font-weight: bold;
+      box-shadow: 0 4px 15px rgba(79, 209, 197, 0.4);
+      display: none;
+      z-index: 1000;
+    }
+    @media (max-width: 480px) {
+      h1 { font-size: 2.2rem; }
+      .game-stats { flex-direction: column; gap: 8px; }
+      .stat-item { min-width: auto; }
+      #optionsScreen select, #optionsScreen input { width: 200px; }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div id="optionsScreen">
+      <h1>💎 Gemafusion 💎</h1>
+      <div class="instructions">
+        <strong>🎮 Instrucciones del Juego:</strong><br>
+        • Toca dos fichas adyacentes del mismo nivel para fusionarlas<br>
+        • Cada fusión aumenta el nivel y tu puntuación<br>
+        • ¡Alcanza el nivel máximo para ganar!<br>
+        • Las fichas más altas dan más puntos
+      </div>
+      
+      <label>👤 Nombre del Jugador:</label><br>
+      <input type="text" id="playerNick" placeholder="Ingresa tu nombre" value="Jugador"><br>
+      
+      <label>📐 Tamaño del Tablero:</label><br>
+      <select id="gridType">
+        <option value="3x4">3x4 (Principiante)</option>
+        <option value="4x5" selected>4x5 (Normal)</option>
+        <option value="5x6">5x6 (Experto)</option>
+      </select><br>
+      
+      <label>🎯 Nivel Máximo:</label><br>
+      <select id="maxLevel">
+        <option value="5">5 niveles (Rápido)</option>
+        <option value="7" selected>7 niveles (Normal)</option>
+        <option value="10">10 niveles (Desafío)</option>
+      </select><br>
+      
+      <button onclick="startGame()">🚀 Comenzar Partida</button>
+      <div class="loading-indicator" id="loadingIndicator">
+        <div class="loading-spinner"></div>
+        Cargando recursos del juego...
+      </div>
+      <p id="highScore" style="margin-top: 25px; font-size: 20px; font-weight: 500;">
+        🏆 Récord Personal: <span id="highScoreValue" style="color: #4fd1c5;">0</span>
+      </p>
+    </div>
 
+    <div id="gameScreen">
+      <h1>💎 Gemafusion 💎</h1>
+      
+      <div class="game-stats">
+        <div class="stat-item">
+          <div class="stat-label">Puntuación</div>
+          <div class="stat-value" id="score">0</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">Movimientos</div>
+          <div class="stat-value" id="moves">0</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-label">Nivel Max</div>
+          <div class="stat-value" id="maxReached">1</div>
+        </div>
+      </div>
+
+      <div style="margin: 20px 0;">
+        <div style="color: #a0aec0; font-size: 15px; margin-bottom: 8px;">Próxima Ficha:</div>
+        <div id="nextTile"></div>
+      </div>
+
+      <div id="gameBoard"></div>
+
+      <div class="game-controls">
+        <button class="control-btn" onclick="restartGame()">🔄 Nueva Partida</button>
+        <button class="control-btn" onclick="backToMenu()">🏠 Menú Principal</button>
+        <button class="control-btn" onclick="toggleFullscreen()">⛶ Pantalla Completa</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PWA Install Button -->
+  <button class="pwa-install" id="installButton" onclick="installPWA()">
+    📱 Instalar App
+  </button>
+
+  <script>
+    // Variables globales del juego
+    let boardSizeX = 4;
+    let boardSizeY = 5;
+    let board = [];
+    let score = 0;
+    let moves = 0;
+    let selectedTile = null;
+    let nextTileLevel = 0;
+    let maxLevel = 7;
+    let maxReachedLevel = 1;
+    let playerNick = 'Jugador';
+    let gameStartTime = 0;
+    let deferredPrompt = null;
+
+    // URLs de imágenes remotas optimizadas
+    const TILE_IMAGES = {
+      0: 'https://i.imgur.com/kAG95VA.png',
+      1: 'https://i.imgur.com/i8CAuAt.png',
+      2: 'https://i.imgur.com/tbMD5JL.png',
+      3: 'https://i.imgur.com/tgD0AbX.png',
+      4: 'https://i.imgur.com/8q4EpBy.png',
+      5: 'https://i.imgur.com/Y7QEpUN.png',
+      6: 'https://i.imgur.com/PZ1hxDg.png',
+      7: 'https://i.imgur.com/Fcb2mZZ.png',
+      8: 'https://i.imgur.com/4bv2x5b.png',
+      9: 'https://i.imgur.com/jmTFI3H.png'
+    };
+
+    // PWA Service Worker Registration
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .then(registration => {
+            console.log('✅ Service Worker registrado correctamente');
+          })
+          .catch(error => {
+            console.log('❌ Error al registrar Service Worker:', error);
+          });
+      });
+    }
+
+    // PWA Install Prompt
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      document.getElementById('installButton').style.display = 'block';
+    });
+
+    function installPWA() {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then((choiceResult) => {
+          if (choiceResult.outcome === 'accepted') {
+            console.log('✅ PWA instalada');
+          }
+          deferredPrompt = null;
+          document.getElementById('installButton').style.display = 'none';
+        });
+      }
+    }
+
+    // Precargar imágenes con mejor manejo de errores
+    function preloadImages() {
+      return new Promise((resolve, reject) => {
+        const loadingIndicator = document.getElementById('loadingIndicator');
+        loadingIndicator.style.display = 'flex';
+        loadingIndicator.style.alignItems = 'center';
+        
+        const imagePromises = Object.values(TILE_IMAGES).map(url => {
+          return new Promise((resolveImg, rejectImg) => {
+            const img = new Image();
+            img.onload = () => resolveImg(url);
+            img.onerror = () => {
+              console.warn(`⚠️ No se pudo cargar: ${url}`);
+              resolveImg(url); // Resolver en lugar de rechazar para continuar
+            };
+            img.src = url;
+          });
+        });
+
+        Promise.all(imagePromises)
+          .then(() => {
+            loadingIndicator.style.display = 'none';
+            console.log('✅ Recursos cargados correctamente');
+            resolve();
+          })
+          .catch(error => {
+            loadingIndicator.style.display = 'none';
+            console.error('❌ Error cargando recursos:', error);
+            resolve(); // Continuar aunque algunas imágenes fallen
+          });
+      });
+    }
+
+    // Obtener imagen para nivel específico
+    function getTileImage(level) {
+      return TILE_IMAGES[Math.min(level, 9)] || TILE_IMAGES[0];
+    }
+
+    // Inicializar tablero de juego
+    function initBoard() {
+      board = Array(boardSizeY).fill().map(() => Array(boardSizeX).fill(null));
+      
+      // Crear fichas iniciales con distribución balanceada
+      for (let i = 0; i < boardSizeY; i++) {
+        for (let j = 0; j < boardSizeX; j++) {
+          const rand = Math.random();
+          const randomLevel = rand < 0.7 ? 0 : rand < 0.9 ? 1 : 2;
+          board[i][j] = { 
+            level: randomLevel, 
+            element: createTileElement(randomLevel, i, j) 
+          };
+        }
+      }
+      
+      // Generar primera ficha siguiente
+      nextTileLevel = Math.floor(Math.random() * Math.min(3, maxLevel));
+      
+      renderBoard();
+      updateNextTile();
+      updateStats();
+    }
+
+    // Crear elemento de ficha mejorado
+    function createTileElement(level, row, col) {
+      const tile = document.createElement('div');
+      tile.className = `tile level-${level}`;
+      tile.dataset.row = row;
+      tile.dataset.col = col;
+      tile.dataset.level = level;
+      
+      // Crear texto del nivel
+      const tileText = document.createElement('div');
+      tileText.className = 'tile-text';
+      tileText.textContent = level + 1;
+      tile.appendChild(tileText);
+      
+      // Aplicar imagen de fondo
+      const imageUrl = getTileImage(level);
+      tile.style.backgroundImage = `url('${imageUrl}')`;
+      
+      // Calcular tamaño responsivo optimizado
+      const viewportWidth = window.innerWidth;
+      const viewportHeight = window.innerHeight;
+      const availableWidth = Math.min(viewportWidth * 0.9, viewportHeight * 0.6);
+      
+      const baseTileSize = Math.floor((availableWidth - 80) / boardSizeX) - 15;
+      const enlargedTileSize = Math.floor(baseTileSize * 1.2);
+      const finalTileSize = Math.max(70, Math.min(enlargedTileSize, 140));
+      
+      tile.style.width = `${finalTileSize}px`;
+      tile.style.height = `${finalTileSize}px`;
+      tileText.style.fontSize = `${Math.max(18, finalTileSize * 0.22)}px`;
+      
+      // Eventos mejorados para móvil y escritorio
+      tile.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        handleTileClick(row, col);
+      }, { passive: false });
+      
+      tile.addEventListener('click', (e) => {
+        e.preventDefault();
+        handleTileClick(row, col);
+      });
+      
+      return tile;
+    }
+
+    // Actualizar ficha siguiente
+    function updateNextTile() {
+      const nextTileContainer = document.getElementById('nextTile');
+      nextTileContainer.innerHTML = '';
+      
+      const tile = document.createElement('div');
+      tile.className = 'next-tile';
+      tile.textContent = nextTileLevel + 1;
+      tile.style.backgroundImage = `url('${getTileImage(nextTileLevel)}')`;
+      
+      nextTileContainer.appendChild(tile);
+    }
+
+    // Renderizar tablero completo
+    function renderBoard() {
+      const gameBoard = document.getElementById('gameBoard');
+      gameBoard.innerHTML = '';
+      
+      // Configurar grid con tamaños dinámicos
+      const viewportWidth = window.innerWidth;
+      const viewportHeight = window.innerHeight;
+      const availableWidth = Math.min(viewportWidth * 0.9, viewportHeight * 0.6);
+      
+      const baseTileSize = Math.floor((availableWidth - 80) / boardSizeX) - 15;
+      const enlargedTileSize = Math.floor(baseTileSize * 1.2);
+      const finalTileSize = Math.max(70, Math.min(enlargedTileSize, 140));
+      
+      gameBoard.style.gridTemplateColumns = `repeat(${boardSizeX}, ${finalTileSize}px)`;
+      gameBoard.style.gridTemplateRows = `repeat(${boardSizeY}, ${finalTileSize}px)`;
+      
+      for (let i = 0; i < boardSizeY; i++) {
+        for (let j = 0; j < boardSizeX; j++) {
+          if (board[i][j] && board[i][j].element) {
+            gameBoard.appendChild(board[i][j].element);
+          }
+        }
+      }
+    }
+
+    // Manejar clic/toque en ficha
+    function handleTileClick(row, col) {
+      if (!board[row][col]) return;
+
+      if (!selectedTile) {
+        // Seleccionar ficha
+        selectedTile = { row, col };
+        board[row][col].element.classList.add('selected');
+      } else {
+        const { row: prevRow, col: prevCol } = selectedTile;
+        board[prevRow][prevCol].element.classList.remove('selected');
+
+        if (row === prevRow && col === prevCol) {
+          // Deseleccionar la misma ficha
+          selectedTile = null;
+          return;
+        }
+
+        if (isAdjacent(row, col, prevRow, prevCol) && 
+            board[row][col].level === board[prevRow][prevCol].level) {
+          // Fusionar fichas
+          mergeTiles(row, col, prevRow, prevCol);
+          moves++;
+        }
+        
+        selectedTile = null;
+      }
+    }
+
+    // Verificar adyacencia
+    function isAdjacent(row1, col1, row2, col2) {
+      return (Math.abs(row1 - row2) === 1 && col1 === col2) || 
+             (Math.abs(col1 - col2) === 1 && row1 === row2);
+    }
+
+    // Sistema de fusión mejorado
+    function mergeTiles(row, col, prevRow, prevCol) {
+      const level = board[row][col].level;
+      
+      if (level >= maxLevel - 1) return;
+
+      // Sistema de puntuación exponencial
+      const basePoints = Math.pow(2, level + 2) * 5;
+      const levelBonus = (level + 1) * 10;
+      const points = basePoints + levelBonus;
+      score += points;
+
+      // Crear nueva ficha fusionada
+      const newLevel = level + 1;
+      board[row][col] = { 
+        level: newLevel, 
+        element: createTileElement(newLevel, row, col) 
+      };
+      board[row][col].element.classList.add('merged');
+      
+      // Actualizar nivel máximo alcanzado
+      if (newLevel + 1 > maxReachedLevel) {
+        maxReachedLevel = newLevel + 1;
+      }
+
+      // Colocar nueva ficha en posición vacía
+      board[prevRow][prevCol] = { 
+        level: nextTileLevel, 
+        element: createTileElement(nextTileLevel, prevRow, prevCol) 
+      };
+
+      // Generar siguiente ficha con probabilidades ajustadas
+      const rand = Math.random();
+      nextTileLevel = rand < 0.5 ? 0 : 
+                     rand < 0.8 ? 1 : 
+                     rand < 0.95 ? 2 : 
+                     Math.min(3, maxLevel - 1);
+
+      updateNextTile();
+      renderBoard();
+      updateStats();
+      
+      // Verificar condición de victoria
+      if (newLevel >= maxLevel - 1) {
+        setTimeout(() => {
+          const finalTime = Math.floor((Date.now() - gameStartTime) / 1000);
+          alert(`🎉 ¡Felicidades ${playerNick}!\n\n` +
+                `Has completado el juego alcanzando el nivel ${maxLevel}!\n\n` +
+                `📊 Estadísticas Finales:\n` +
+                `• Puntuación: ${score}\n` +
+                `• Movimientos: ${moves}\n` +
+                `• Tiempo: ${finalTime}s`);
+          saveHighScore();
+        }, 800);
+      }
+    }
+
+    // Actualizar estadísticas en pantalla
+    function updateStats() {
+      document.getElementById('score').textContent = score.toLocaleString();
+      document.getElementById('moves').textContent = moves;
+      document.getElementById('maxReached').textContent = maxReachedLevel;
+    }
+
+    // Sistema de guardado de récords
+    function saveHighScore() {
+      const currentHigh = parseInt(localStorage.getItem('gemafusion-highscore') || '0');
+      if (score > currentHigh) {
+        localStorage.setItem('gemafusion-highscore', score.toString());
+        localStorage.setItem('gemafusion-highscore-player', playerNick);
+        updateHighScoreDisplay();
+        
+        // Mostrar notificación de nuevo récord
+        setTimeout(() => {
+          alert(`🏆 ¡NUEVO RÉCORD PERSONAL!\n\nAnterior: ${currentHigh}\nNuevo: ${score}\n\n¡Excelente trabajo, ${playerNick}!`);
+        }, 100);
+      }
+    }
+
+    // Mostrar récord actual
+    function updateHighScoreDisplay() {
+      const highScore = localStorage.getItem('gemafusion-highscore') || '0';
+      const highScorePlayer = localStorage.getItem('gemafusion-highscore-player') || 'Anónimo';
+      document.getElementById('highScoreValue').textContent = parseInt(highScore).toLocaleString();
+    }
+
+    // Iniciar nueva partida
+    async function startGame() {
+      try {
+        const loadingIndicator = document.getElementById('loadingIndicator');
+        loadingIndicator.style.display = 'flex';
+        
+        // Precargar recursos
+        await preloadImages();
+        
+        // Configurar parámetros del juego
+        const gridType = document.getElementById('gridType').value;
+        [boardSizeX, boardSizeY] = gridType.split('x').map(Number);
+        maxLevel = parseInt(document.getElementById('maxLevel').value);
+        playerNick = document.getElementById('playerNick').value.trim() || 'Jugador';
+        
+        // Resetear estado del juego
+        score = 0;
+        moves = 0;
+        maxReachedLevel = 1;
+        selectedTile = null;
+        gameStartTime = Date.now();
+        
+        // Cambiar a pantalla de juego
+        document.getElementById('optionsScreen').style.display = 'none';
+        document.getElementById('gameScreen').style.display = 'flex';
+        
+        // Inicializar tablero
+        initBoard();
+        
+        console.log(`🎮 Nueva partida iniciada - ${boardSizeX}x${boardSizeY}, Nivel máximo: ${maxLevel}, Jugador: ${playerNick}`);
+      } catch (error) {
+        console.error('Error al iniciar el juego:', error);
+        alert('❌ Error al inicializar el juego. Por favor, verifica tu conexión a internet e inténtalo de nuevo.');
+      

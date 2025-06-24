@@ -722,4 +722,92 @@
       } catch (error) {
         console.error('Error al iniciar el juego:', error);
         alert('❌ Error al inicializar el juego. Por favor, verifica tu conexión a internet e inténtalo de nuevo.');
+} catch (error) {
+        console.error('Error al iniciar el juego:', error);
+        alert('❌ Error al inicializar el juego. Por favor, verifica tu conexión a internet e inténtalo de nuevo.');
+      }
+    }
+
+    // Reiniciar juego
+    function restartGame() {
+      if (confirm('¿Estás seguro de que quieres reiniciar la partida actual?')) {
+        saveHighScore();
+        startGame();
+      }
+    }
+
+    // Volver al menú principal
+    function backToMenu() {
+      if (confirm('¿Volver al menú principal? Se perderá el progreso actual.')) {
+        saveHighScore();
+        document.getElementById('gameScreen').style.display = 'none';
+        document.getElementById('optionsScreen').style.display = 'flex';
+      }
+    }
+
+    // Alternar pantalla completa
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(err => {
+          console.log('Error al activar pantalla completa:', err);
+        });
+      } else {
+        document.exitFullscreen();
+      }
+    }
+
+    // Inicialización al cargar la página
+    window.addEventListener('load', () => {
+      console.log('🎮 Gemafusion PWA cargado correctamente');
+      updateHighScoreDisplay();
+      
+      // Precargar imágenes en segundo plano
+      preloadImages().catch(error => {
+        console.warn('Advertencia: Algunas imágenes no se pudieron precargar:', error);
+      });
+    });
+
+    // Prevenir zoom en dispositivos móviles
+    document.addEventListener('touchstart', function(event) {
+      if (event.touches.length > 1) {
+        event.preventDefault();
+      }
+    }, { passive: false });
+
+    // Prevenir scroll bounce en iOS
+    document.addEventListener('touchmove', function(event) {
+      event.preventDefault();
+    }, { passive: false });
+
+    // Manejar cambios de orientación
+    window.addEventListener('orientationchange', () => {
+      setTimeout(() => {
+        if (document.getElementById('gameScreen').style.display !== 'none') {
+          renderBoard();
+        }
+      }, 100);
+    });
+
+    // Optimización para rendimiento
+    window.addEventListener('resize', debounce(() => {
+      if (document.getElementById('gameScreen').style.display !== 'none') {
+        renderBoard();
+      }
+    }, 250));
+
+    // Función debounce para optimizar resize
+    function debounce(func, wait) {
+      let timeout;
+      return function executedFunction(...args) {
+        const later = () => {
+          clearTimeout(timeout);
+          func(...args);
+        };
+        clearTimeout(timeout);
+        timeout = setTimeout(later, wait);
+      };
+    }
+  </script>
+</body>
+</html>
       

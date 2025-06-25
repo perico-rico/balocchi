@@ -19,16 +19,16 @@ const STATIC_FILES = [
 
 // URLs de imágenes remotas para cachear
 const REMOTE_IMAGES = [
-  'https://i.imgur.com/kAG95VA.png',
-  'https://i.imgur.com/i8CAuAt.png',
-  'https://i.imgur.com/tbMD5JL.png',
-  'https://i.imgur.com/tgD0AbX.png',
-  'https://i.imgur.com/8q4EpBy.png',
-  'https://i.imgur.com/Y7QEpUN.png',
-  'https://i.imgur.com/PZ1hxDg.png',
-  'https://i.imgur.com/Fcb2mZZ.png',
-  'https://i.imgur.com/4bv2x5b.png',
-  'https://i.imgur.com/jmTFI3H.png'
+      './images/d01.png',
+      './images/d02.png',
+      './images/d03.png',
+      './images/d04.png',
+      './images/d05.png',
+      './images/d06.png',
+      './images/d07.png',
+      './images/d08.png',
+      './images/d09.png',
+      './images/d10.png'
 ];
 
 // Instalación del Service Worker

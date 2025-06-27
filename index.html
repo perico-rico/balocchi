@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-  <title>Gemafusion - PWA Game</title>
+  <title>Gemafusion - Enhanced PWA Game</title>
   
   <!-- PWA Meta Tags -->
   <link rel="manifest" href="./manifest.json">
@@ -74,6 +74,10 @@
       padding: 4px 8px;
       border-radius: 8px;
       backdrop-filter: blur(4px);
+      transition: opacity 0.3s ease;
+    }
+    .tile-text.hidden {
+      opacity: 0;
     }
     .next-tile {
       width: 100px;
@@ -224,6 +228,17 @@
       transform: translateY(-1px);
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     }
+    .control-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+    .control-btn.bonus {
+      background: linear-gradient(135deg, #e53e3e, #c53030);
+    }
+    .control-btn.bonus:hover:not(:disabled) {
+      background: linear-gradient(135deg, #c53030, #9c2626);
+    }
     .loading-indicator {
       display: none;
       margin: 15px 0;
@@ -260,26 +275,117 @@
       border: 2px solid rgba(79, 209, 197, 0.2);
       box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
     }
-    .pwa-install {
-      position: fixed;
-      bottom: 20px;
-      right: 20px;
-      background: linear-gradient(45deg, #4fd1c5, #38b2ac);
-      color: white;
-      border: none;
-      padding: 12px 20px;
-      border-radius: 25px;
-      cursor: pointer;
+    .level-preview {
+      display: flex;
+      justify-content: center;
+      gap: 5px;
+      margin: 10px 0;
+      flex-wrap: wrap;
+    }
+    .preview-tile {
+      width: 30px;
+      height: 30px;
+      border-radius: 6px;
+      background-size: contain;
+      background-position: center;
+      background-repeat: no-repeat;
+      border: 1px solid rgba(79, 209, 197, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
       font-weight: bold;
-      box-shadow: 0 4px 15px rgba(79, 209, 197, 0.4);
-      display: none;
+      color: white;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+    }
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      display: flex;
+      justify-content: center;
+      align-items: center;
       z-index: 1000;
+    }
+    .modal-content {
+      background: linear-gradient(135deg, #2d3748, #1a202c);
+      padding: 30px;
+      border-radius: 15px;
+      border: 2px solid rgba(79, 209, 197, 0.3);
+      max-width: 400px;
+      width: 90%;
+    }
+    .theme-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 15px;
+      margin: 20px 0;
+    }
+    .theme-option {
+      padding: 15px;
+      border: 2px solid rgba(79, 209, 197, 0.3);
+      border-radius: 10px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-align: center;
+    }
+    .theme-option:hover, .theme-option.selected {
+      border-color: #4fd1c5;
+      background: rgba(79, 209, 197, 0.1);
+    }
+    .records-modal {
+      max-width: 600px;
+    }
+    .records-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 20px 0;
+    }
+    .records-table th,
+    .records-table td {
+      padding: 10px;
+      text-align: left;
+      border-bottom: 1px solid rgba(79, 209, 197, 0.3);
+    }
+    .records-table th {
+      background: rgba(79, 209, 197, 0.2);
+    }
+    .tile-chooser {
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 10px;
+      margin: 20px 0;
+    }
+    .tile-choice {
+      width: 50px;
+      height: 50px;
+      border: 2px solid rgba(79, 209, 197, 0.3);
+      border-radius: 8px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-size: contain;
+      background-position: center;
+      background-repeat: no-repeat;
+      font-weight: bold;
+      color: white;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+      transition: all 0.3s ease;
+    }
+    .tile-choice:hover {
+      border-color: #4fd1c5;
+      transform: scale(1.1);
     }
     @media (max-width: 480px) {
       h1 { font-size: 2.2rem; }
       .game-stats { flex-direction: column; gap: 8px; }
       .stat-item { min-width: auto; }
       #optionsScreen select, #optionsScreen input { width: 200px; }
+      .preview-tile { width: 25px; height: 25px; font-size: 8px; }
     }
   </style>
 </head>
@@ -312,7 +418,17 @@
         <option value="10">10 niveles (Desafío)</option>
       </select><br>
       
+      <label>🎨 Tema Visual:</label><br>
+      <select id="themeSelect">
+        <option value="diamonds" selected>💎 Diamantes</option>
+        <option value="frutas">🍎 Frutas</option>
+        <option value="frutas2">🍓 Frutas 2</option>
+        <option value="flores">🌸 Flores</option>
+        <option value="vegetales">🥬 Vegetales</option>
+      </select><br>
+      
       <button onclick="startGame()">🚀 Comenzar Partida</button>
+      <button onclick="showRecords()">🏆 Ver Récords</button>
       <div class="loading-indicator" id="loadingIndicator">
         <div class="loading-spinner"></div>
         Cargando recursos del juego...
@@ -345,20 +461,103 @@
         <div id="nextTile"></div>
       </div>
 
+      <div style="margin: 10px 0;">
+        <div style="color: #a0aec0; font-size: 13px; margin-bottom: 5px;">Niveles Disponibles:</div>
+        <div id="levelPreview" class="level-preview"></div>
+      </div>
+
       <div id="gameBoard"></div>
 
       <div class="game-controls">
+        <button class="control-btn" onclick="toggleNumbers()">
+          <span id="numbersToggleText">🔢 Ocultar Números</span>
+        </button>
+        <button class="control-btn bonus" id="bonusBtn" onclick="showBonusModal()">
+          ⭐ Cambiar Ficha (<span id="bonusCount">3</span>)
+        </button>
+        <button class="control-btn bonus" id="undoBtn" onclick="undoMove()">
+          ↶ Deshacer (<span id="undoCount">3</span>)
+        </button>
         <button class="control-btn" onclick="restartGame()">🔄 Nueva Partida</button>
         <button class="control-btn" onclick="backToMenu()">🏠 Menú Principal</button>
-        <button class="control-btn" onclick="toggleFullscreen()">⛶ Pantalla Completa</button>
+        <button class="control-btn" onclick="showRecords()">🏆 Récords</button>
+        <button class="control-btn" onclick="exitGame()">❌ Salir</button>
       </div>
     </div>
   </div>
 
-  <!-- PWA Install Button -->
-  <button class="pwa-install" id="installButton" onclick="installPWA()">
-    📱 Instalar App
-  </button>
+  <!-- Modales -->
+  <div id="themeModal" class="modal" style="display: none;">
+    <div class="modal-content">
+      <h2>🎨 Seleccionar Tema</h2>
+      <div class="theme-grid">
+        <div class="theme-option" data-theme="diamonds">
+          <div>💎</div>
+          <div>Diamantes</div>
+        </div>
+        <div class="theme-option" data-theme="frutas">
+          <div>🍎</div>
+          <div>Frutas</div>
+        </div>
+        <div class="theme-option" data-theme="frutas2">
+          <div>🍓</div>
+          <div>Frutas 2</div>
+        </div>
+        <div class="theme-option" data-theme="flores">
+          <div>🌸</div>
+          <div>Flores</div>
+        </div>
+        <div class="theme-option" data-theme="vegetales">
+          <div>🥬</div>
+          <div>Vegetales</div>
+        </div>
+      </div>
+      <button class="control-btn" onclick="closeModal('themeModal')">Cerrar</button>
+    </div>
+  </div>
+
+  <div id="bonusModal" class="modal" style="display: none;">
+    <div class="modal-content">
+      <h2>⭐ Cambiar Próxima Ficha</h2>
+      <p>Selecciona el nivel de ficha que quieres:</p>
+      <div id="tileChooser" class="tile-chooser"></div>
+      <button class="control-btn" onclick="closeModal('bonusModal')">Cancelar</button>
+    </div>
+  </div>
+
+  <div id="recordsModal" class="modal" style="display: none;">
+    <div class="modal-content records-modal">
+      <h2>🏆 Récords por Modalidad</h2>
+      <div>
+        <label>Modalidad: </label>
+        <select id="recordsFilter" onchange="updateRecordsDisplay()">
+          <option value="3x4_5">3x4 - 5 niveles</option>
+          <option value="3x4_7">3x4 - 7 niveles</option>
+          <option value="3x4_10">3x4 - 10 niveles</option>
+          <option value="4x5_5">4x5 - 5 niveles</option>
+          <option value="4x5_7" selected>4x5 - 7 niveles</option>
+          <option value="4x5_10">4x5 - 10 niveles</option>
+          <option value="5x6_5">5x6 - 5 niveles</option>
+          <option value="5x6_7">5x6 - 7 niveles</option>
+          <option value="5x6_10">5x6 - 10 niveles</option>
+        </select>
+      </div>
+      <table class="records-table">
+        <thead>
+          <tr>
+            <th>Pos</th>
+            <th>Jugador</th>
+            <th>Puntuación</th>
+            <th>Fichas Max</th>
+            <th>Fecha</th>
+          </tr>
+        </thead>
+        <tbody id="recordsTableBody">
+        </tbody>
+      </table>
+      <button class="control-btn" onclick="closeModal('recordsModal')">Cerrar</button>
+    </div>
+  </div>
 
   <script>
     // Variables globales del juego
@@ -373,52 +572,357 @@
     let maxReachedLevel = 1;
     let playerNick = 'Jugador';
     let gameStartTime = 0;
-    let deferredPrompt = null;
+    let showNumbers = true;
+    let currentTheme = 'diamonds';
+    let bonusesLeft = 3;
+    let undosLeft = 3;
+    let gameHistory = [];
 
-    // URLs de imágenes remotas optimizadas
-    const TILE_IMAGES = {
-      0: './images/d01.png',
-      1: './images/d02.png',
-      2: './images/d03.png',
-      3: './images/d04.png',
-      4: './images/d05.png',
-      5: './images/d06.png',
-      6: './images/d07.png',
-      7: './images/d08.png',
-      8: './images/d09.png',
-      9: './images/d10.png'
+    // Sistema de temas
+    const THEMES = {
+      diamonds: {
+        name: 'Diamantes',
+        folder: './images/diamonds/',
+        prefix: 'd',
+        available: true
+      },
+      frutas: {
+        name: 'Frutas',
+        folder: './images/frutas/',
+        prefix: 'a',
+        available: true
+      },
+      frutas2: {
+        name: 'Frutas 2',
+        folder: './images/frutas2/',
+        prefix: 'b',
+        available: true
+      },
+      flores: {
+        name: 'Flores',
+        folder: './images/flores/',
+        prefix: 'f',
+        available: true
+      },
+      vegetales: {
+        name: 'Vegetales',
+        folder: './images/vegeta/',
+        prefix: 'v',
+        available: true
+      }
     };
 
-    // PWA Service Worker Registration
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => {
-        navigator.serviceWorker.register('./sw.js')
-          .then(registration => {
-            console.log('✅ Service Worker registrado correctamente');
-          })
-          .catch(error => {
-            console.log('❌ Error al registrar Service Worker:', error);
-          });
+    // URLs de imágenes según tema
+    const TILE_IMAGES = {};
+
+    // Sistema de audio
+    const SOUNDS = {
+      welcome: './sounds/welcome.mp3',
+      merge: './sounds/merge.wav',
+      levelup: './sounds/levelup.mp3',
+      victory: './sounds/victory.wav',
+      bonus: './sounds/bonus.wav',
+      undo: './sounds/undo.wav'
+    };
+
+    // Función para reproducir sonidos
+    function playSound(soundName) {
+      try {
+        if (SOUNDS[soundName]) {
+          const audio = new Audio(SOUNDS[soundName]);
+          audio.volume = 0.5;
+          audio.play().catch(e => console.log('Audio no disponible:', soundName));
+        }
+      } catch (e) {
+        console.log('Error de audio:', e);
+      }
+    }
+
+    // Generar URLs de imágenes para tema actual
+    function generateTileImages(theme) {
+      const themeData = THEMES[theme];
+      const images = {};
+      
+      for (let i = 0; i <= 9; i++) {
+        const num = String(i + 1).padStart(2, '0');
+        images[i] = `${themeData.folder}${themeData.prefix}${num}.png`;
+      }
+      
+      return images;
+    }
+
+    // Obtener imagen para nivel específico
+    function getTileImage(level) {
+      return TILE_IMAGES[Math.min(level, 9)] || TILE_IMAGES[0];
+    }
+
+    // Obtener niveles presentes en el tablero
+    function getBoardLevels() {
+      const levels = new Set();
+      for (let i = 0; i < boardSizeY; i++) {
+        for (let j = 0; j < boardSizeX; j++) {
+          if (board[i][j]) {
+            levels.add(board[i][j].level);
+          }
+        }
+      }
+      return Array.from(levels).sort((a, b) => a - b);
+    }
+
+    // Generar próxima ficha con lógica inteligente
+    function generateNextTileLevel() {
+      const presentLevels = getBoardLevels();
+      if (presentLevels.length === 0) {
+        return 0; // Tablero vacío, empezar con nivel 0
+      }
+
+      const minLevel = Math.min(...presentLevels);
+      const maxPresentLevel = Math.max(...presentLevels);
+      const maxValidLevel = Math.max(0, maxPresentLevel - 2);
+      
+      // Crear array de niveles válidos (que existen en tablero)
+      const validLevels = presentLevels.filter(level => level <= maxValidLevel);
+      
+      if (validLevels.length === 0) {
+        return minLevel; // Fallback
+      }
+
+      // Sistema de probabilidades ponderadas (favorece niveles bajos)
+      const weights = [];
+      if (validLevels.length === 1) {
+        weights.push(100);
+      } else if (validLevels.length === 2) {
+        weights.push(70, 30);
+      } else if (validLevels.length === 3) {
+        weights.push(50, 30, 20);
+      } else if (validLevels.length === 4) {
+        weights.push(40, 30, 20, 10);
+      } else {
+        weights.push(35, 25, 20, 15);
+        for (let i = 4; i < validLevels.length; i++) {
+          weights.push(5);
+        }
+      }
+
+      // Selección ponderada
+      const totalWeight = weights.reduce((sum, w) => sum + w, 0);
+      let random = Math.random() * totalWeight;
+      
+      for (let i = 0; i < validLevels.length; i++) {
+        random -= weights[i];
+        if (random <= 0) {
+          return validLevels[i];
+        }
+      }
+      
+      return validLevels[0]; // Fallback
+    }
+
+    // Actualizar preview de niveles
+    function updateLevelPreview() {
+      const preview = document.getElementById('levelPreview');
+      preview.innerHTML = '';
+      
+      for (let i = 0; i < maxLevel; i++) {
+        const tile = document.createElement('div');
+        tile.className = 'preview-tile';
+        tile.style.backgroundImage = `url('${getTileImage(i)}')`;
+        tile.textContent = i + 1;
+        preview.appendChild(tile);
+      }
+    }
+
+    // Toggle mostrar/ocultar números
+    function toggleNumbers() {
+      showNumbers = !showNumbers;
+      const toggleText = document.getElementById('numbersToggleText');
+      toggleText.textContent = showNumbers ? '🔢 Ocultar Números' : '🔢 Mostrar Números';
+      
+      // Aplicar a todas las fichas existentes
+      document.querySelectorAll('.tile-text').forEach(text => {
+        text.classList.toggle('hidden', !showNumbers);
+      });
+      
+      // Aplicar a siguiente ficha
+      const nextTileElement = document.querySelector('.next-tile');
+      if (nextTileElement) {
+        nextTileElement.style.color = showNumbers ? 'white' : 'transparent';
+      }
+    }
+
+    // Sistema de bonus - cambiar ficha
+    function showBonusModal() {
+      if (bonusesLeft <= 0) return;
+      
+      const modal = document.getElementById('bonusModal');
+      const chooser = document.getElementById('tileChooser');
+      chooser.innerHTML = '';
+      
+      // Mostrar opciones de fichas disponibles
+      const presentLevels = getBoardLevels();
+      const maxPresentLevel = Math.max(...presentLevels);
+      const maxValidLevel = Math.max(0, maxPresentLevel - 2);
+      
+      for (let i = 0; i <= Math.min(maxValidLevel, maxLevel - 1); i++) {
+        const tile = document.createElement('div');
+        tile.className = 'tile-choice';
+        tile.style.backgroundImage = `url('${getTileImage(i)}')`;
+        tile.textContent = showNumbers ? (i + 1) : '';
+        tile.onclick = () => useBonusChangeTitle(i);
+        chooser.appendChild(tile);
+      }
+      
+      modal.style.display = 'flex';
+    }
+
+    function useBonusChangeTitle(level) {
+      nextTileLevel = level;
+      bonusesLeft--;
+      updateNextTile();
+      updateBonusButtons();
+      playSound('bonus');
+      closeModal('bonusModal');
+    }
+
+    // Sistema de deshacer movimientos
+    function saveGameState() {
+      const state = {
+        board: JSON.parse(JSON.stringify(board.map(row => 
+          row.map(cell => cell ? { level: cell.level } : null)
+        ))),
+        score,
+        moves,
+        nextTileLevel,
+        maxReachedLevel
+      };
+      
+      gameHistory.push(state);
+      if (gameHistory.length > 3) {
+        gameHistory.shift();
+      }
+    }
+
+    function undoMove() {
+      if (undosLeft <= 0 || gameHistory.length === 0) return;
+      
+      const previousState = gameHistory.pop();
+      undosLeft--;
+      
+      // Restaurar estado
+      score = previousState.score;
+      moves = previousState.moves;
+      nextTileLevel = previousState.nextTileLevel;
+      maxReachedLevel = previousState.maxReachedLevel;
+      
+      // Limpiar tablero actual
+      const gameBoard = document.getElementById('gameBoard');
+      gameBoard.innerHTML = '';
+      
+      // Recrear tablero desde estado guardado
+      board = Array(boardSizeY).fill().map(() => Array(boardSizeX).fill(null));
+      for (let i = 0; i < boardSizeY; i++) {
+        for (let j = 0; j < boardSizeX; j++) {
+          if (previousState.board[i][j]) {
+            board[i][j] = {
+              level: previousState.board[i][j].level,
+              element: createTileElement(previousState.board[i][j].level, i, j)
+            };
+          }
+        }
+      }
+      
+      renderBoard();
+      updateNextTile();
+      updateStats();
+      updateBonusButtons();
+      playSound('undo');
+    }
+
+    function updateBonusButtons() {
+      document.getElementById('bonusCount').textContent = bonusesLeft;
+      document.getElementById('undoCount').textContent = undosLeft;
+      document.getElementById('bonusBtn').disabled = bonusesLeft <= 0;
+      document.getElementById('undoBtn').disabled = undosLeft <= 0;
+    }
+
+    // Sistema de récords por modalidad
+    function getModalityKey() {
+      return `${boardSizeX}x${boardSizeY}_${maxLevel}`;
+    }
+
+    function saveRecord() {
+      const modalityKey = getModalityKey();
+      const recordKey = `records_${modalityKey}`;
+      
+      // Contar fichas de nivel máximo
+      const maxLevelTiles = getBoardLevels().filter(level => level === maxLevel - 1).length;
+      
+      const newRecord = {
+        player: playerNick,
+        score: score,
+        maxTiles: maxLevelTiles,
+        date: new Date().toLocaleDateString(),
+        timestamp: Date.now()
+      };
+      
+      // Obtener récords existentes
+      let records = JSON.parse(localStorage.getItem(recordKey) || '[]');
+      records.push(newRecord);
+      
+      // Ordenar por puntuación y mantener top 5
+      records.sort((a, b) => b.score - a.score);
+      records = records.slice(0, 5);
+      
+      localStorage.setItem(recordKey, JSON.stringify(records));
+    }
+
+    function getRecords(modalityKey) {
+      const recordKey = `records_${modalityKey}`;
+      return JSON.parse(localStorage.getItem(recordKey) || '[]');
+    }
+
+    function showRecords() {
+      const modal = document.getElementById('recordsModal');
+      const filter = document.getElementById('recordsFilter');
+      filter.value = getModalityKey();
+      updateRecordsDisplay();
+      modal.style.display = 'flex';
+    }
+
+    function updateRecordsDisplay() {
+      const modalityKey = document.getElementById('recordsFilter').value;
+      const records = getRecords(modalityKey);
+      const tbody = document.getElementById('recordsTableBody');
+      
+      tbody.innerHTML = '';
+      
+      if (records.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="5" style="text-align: center;">No hay récords aún</td></tr>';
+        return;
+      }
+      
+      records.forEach((record, index) => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td>${index + 1}</td>
+          <td>${record.player}</td>
+          <td>${record.score.toLocaleString()}</td>
+          <td>${record.maxTiles}</td>
+          <td>${record.date}</td>
+        `;
+        tbody.appendChild(row);
       });
     }
 
-    // PWA Install Prompt
-    window.addEventListener('beforeinstallprompt', (e) => {
-      e.preventDefault();
-      deferredPrompt = e;
-      document.getElementById('installButton').style.display = 'block';
-    });
+    // Cerrar modales
+    function closeModal(modalId) {
+      document.getElementById(modalId).style.display = 'none';
+    }
 
-    function installPWA() {
-      if (deferredPrompt) {
-        deferredPrompt.prompt();
-        deferredPrompt.userChoice.then((choiceResult) => {
-          if (choiceResult.outcome === 'accepted') {
-            console.log('✅ PWA instalada');
-          }
-          deferredPrompt = null;
-          document.getElementById('installButton').style.display = 'none';
-        });
+    // Salir del juego
+    function exitGame() {
+      if (confirm('¿Estás seguro de que quieres salir del juego?')) {
+        window.close();
       }
     }
 
@@ -428,6 +932,9 @@
         const loadingIndicator = document.getElementById('loadingIndicator');
         loadingIndicator.style.display = 'flex';
         loadingIndicator.style.alignItems = 'center';
+        
+        // Generar URLs para tema actual
+        Object.assign(TILE_IMAGES, generateTileImages(currentTheme));
         
         const imagePromises = Object.values(TILE_IMAGES).map(url => {
           return new Promise((resolveImg, rejectImg) => {
@@ -455,11 +962,6 @@
       });
     }
 
-    // Obtener imagen para nivel específico
-    function getTileImage(level) {
-      return TILE_IMAGES[Math.min(level, 9)] || TILE_IMAGES[0];
-    }
-
     // Inicializar tablero de juego
     function initBoard() {
       board = Array(boardSizeY).fill().map(() => Array(boardSizeX).fill(null));
@@ -477,11 +979,13 @@
       }
       
       // Generar primera ficha siguiente
-      nextTileLevel = Math.floor(Math.random() * Math.min(3, maxLevel));
+      nextTileLevel = generateNextTileLevel();
       
       renderBoard();
       updateNextTile();
+      updateLevelPreview();
       updateStats();
+      updateBonusButtons();
     }
 
     // Crear elemento de ficha mejorado
@@ -495,6 +999,9 @@
       // Crear texto del nivel
       const tileText = document.createElement('div');
       tileText.className = 'tile-text';
+      if (!showNumbers) {
+        tileText.classList.add('hidden');
+      }
       tileText.textContent = level + 1;
       tile.appendChild(tileText);
       
@@ -536,7 +1043,7 @@
       
       const tile = document.createElement('div');
       tile.className = 'next-tile';
-      tile.textContent = nextTileLevel + 1;
+      tile.textContent = showNumbers ? (nextTileLevel + 1) : '';
       tile.style.backgroundImage = `url('${getTileImage(nextTileLevel)}')`;
       
       nextTileContainer.appendChild(tile);
@@ -588,6 +1095,8 @@
 
         if (isAdjacent(row, col, prevRow, prevCol) && 
             board[row][col].level === board[prevRow][prevCol].level) {
+          // Guardar estado antes del movimiento
+          saveGameState();
           // Fusionar fichas
           mergeTiles(row, col, prevRow, prevCol);
           moves++;
@@ -603,15 +1112,15 @@
              (Math.abs(col1 - col2) === 1 && row1 === row2);
     }
 
-    // Sistema de fusión mejorado
+    // Sistema de fusión mejorado con puntuación exponencial
     function mergeTiles(row, col, prevRow, prevCol) {
       const level = board[row][col].level;
       
       if (level >= maxLevel - 1) return;
 
-      // Sistema de puntuación exponencial
-      const basePoints = Math.pow(2, level + 2) * 5;
-      const levelBonus = (level + 1) * 10;
+      // Sistema de puntuación exponencial (favorece fusiones altas)
+      const basePoints = Math.pow(2, level + 3) * 5; // Más puntos para niveles altos
+      const levelBonus = (level + 1) * 15;
       const points = basePoints + levelBonus;
       score += points;
 
@@ -626,6 +1135,9 @@
       // Actualizar nivel máximo alcanzado
       if (newLevel + 1 > maxReachedLevel) {
         maxReachedLevel = newLevel + 1;
+        playSound('levelup');
+      } else {
+        playSound('merge');
       }
 
       // Colocar nueva ficha en posición vacía
@@ -634,29 +1146,17 @@
         element: createTileElement(nextTileLevel, prevRow, prevCol) 
       };
 
-      // Generar siguiente ficha con probabilidades ajustadas
-      const rand = Math.random();
-      nextTileLevel = rand < 0.5 ? 0 : 
-                     rand < 0.8 ? 1 : 
-                     rand < 0.95 ? 2 : 
-                     Math.min(3, maxLevel - 1);
+      // Generar siguiente ficha con lógica inteligente
+      nextTileLevel = generateNextTileLevel();
 
       updateNextTile();
       renderBoard();
       updateStats();
       
-      // Verificar condición de victoria
+      // Verificar condición de nivel máximo (sin popup molesto)
       if (newLevel >= maxLevel - 1) {
-        setTimeout(() => {
-          const finalTime = Math.floor((Date.now() - gameStartTime) / 1000);
-          alert(`🎉 ¡Felicidades ${playerNick}!\n\n` +
-                `Has completado el juego alcanzando el nivel ${maxLevel}!\n\n` +
-                `📊 Estadísticas Finales:\n` +
-                `• Puntuación: ${score}\n` +
-                `• Movimientos: ${moves}\n` +
-                `• Tiempo: ${finalTime}s`);
-          saveHighScore();
-        }, 800);
+        saveRecord();
+        playSound('victory');
       }
     }
 
@@ -667,25 +1167,26 @@
       document.getElementById('maxReached').textContent = maxReachedLevel;
     }
 
-    // Sistema de guardado de récords
+    // Sistema de guardado de récords (actualizado)
     function saveHighScore() {
-      const currentHigh = parseInt(localStorage.getItem('gemafusion-highscore') || '0');
+      const modalityKey = getModalityKey();
+      const currentHighKey = `gemafusion-highscore-${modalityKey}`;
+      const currentHigh = parseInt(localStorage.getItem(currentHighKey) || '0');
+      
       if (score > currentHigh) {
-        localStorage.setItem('gemafusion-highscore', score.toString());
-        localStorage.setItem('gemafusion-highscore-player', playerNick);
+        localStorage.setItem(currentHighKey, score.toString());
+        localStorage.setItem(`gemafusion-highscore-player-${modalityKey}`, playerNick);
         updateHighScoreDisplay();
-        
-        // Mostrar notificación de nuevo récord
-        setTimeout(() => {
-          alert(`🏆 ¡NUEVO RÉCORD PERSONAL!\n\nAnterior: ${currentHigh}\nNuevo: ${score}\n\n¡Excelente trabajo, ${playerNick}!`);
-        }, 100);
       }
+      
+      // Guardar en sistema de récords
+      saveRecord();
     }
 
     // Mostrar récord actual
     function updateHighScoreDisplay() {
-      const highScore = localStorage.getItem('gemafusion-highscore') || '0';
-      const highScorePlayer = localStorage.getItem('gemafusion-highscore-player') || 'Anónimo';
+      const modalityKey = getModalityKey();
+      const highScore = localStorage.getItem(`gemafusion-highscore-${modalityKey}`) || '0';
       document.getElementById('highScoreValue').textContent = parseInt(highScore).toLocaleString();
     }
 
@@ -695,14 +1196,15 @@
         const loadingIndicator = document.getElementById('loadingIndicator');
         loadingIndicator.style.display = 'flex';
         
-        // Precargar recursos
-        await preloadImages();
-        
         // Configurar parámetros del juego
         const gridType = document.getElementById('gridType').value;
         [boardSizeX, boardSizeY] = gridType.split('x').map(Number);
         maxLevel = parseInt(document.getElementById('maxLevel').value);
         playerNick = document.getElementById('playerNick').value.trim() || 'Jugador';
+        currentTheme = document.getElementById('themeSelect').value;
+        
+        // Precargar recursos
+        await preloadImages();
         
         // Resetear estado del juego
         score = 0;
@@ -710,21 +1212,24 @@
         maxReachedLevel = 1;
         selectedTile = null;
         gameStartTime = Date.now();
+        bonusesLeft = 3;
+        undosLeft = 3;
+        gameHistory = [];
         
         // Cambiar a pantalla de juego
         document.getElementById('optionsScreen').style.display = 'none';
         document.getElementById('gameScreen').style.display = 'flex';
         
+        // Reproducir sonido de bienvenida
+        setTimeout(() => playSound('welcome'), 500);
+        
         // Inicializar tablero
         initBoard();
         
-        console.log(`🎮 Nueva partida iniciada - ${boardSizeX}x${boardSizeY}, Nivel máximo: ${maxLevel}, Jugador: ${playerNick}`);
+        console.log(`🎮 Nueva partida iniciada - ${boardSizeX}x${boardSizeY}, Nivel máximo: ${maxLevel}, Jugador: ${playerNick}, Tema: ${currentTheme}`);
       } catch (error) {
         console.error('Error al iniciar el juego:', error);
         alert('❌ Error al inicializar el juego. Por favor, verifica tu conexión a internet e inténtalo de nuevo.');
-//} catch (error) {
-  //      console.error('Error al iniciar el juego:', error);
-    //    alert('❌ Error al inicializar el juego. Por favor, verifica tu conexión a internet e inténtalo de nuevo.');
       }
     }
 
@@ -742,28 +1247,28 @@
         saveHighScore();
         document.getElementById('gameScreen').style.display = 'none';
         document.getElementById('optionsScreen').style.display = 'flex';
-      }
-    }
-
-    // Alternar pantalla completa
-    function toggleFullscreen() {
-      if (!document.fullscreenElement) {
-        document.documentElement.requestFullscreen().catch(err => {
-          console.log('Error al activar pantalla completa:', err);
-        });
-      } else {
-        document.exitFullscreen();
+        updateHighScoreDisplay();
       }
     }
 
     // Inicialización al cargar la página
     window.addEventListener('load', () => {
-      console.log('🎮 Gemafusion PWA cargado correctamente');
+      console.log('🎮 Gemafusion PWA Enhanced cargado correctamente');
       updateHighScoreDisplay();
+      
+      // Configurar tema inicial
+      Object.assign(TILE_IMAGES, generateTileImages(currentTheme));
       
       // Precargar imágenes en segundo plano
       preloadImages().catch(error => {
         console.warn('Advertencia: Algunas imágenes no se pudieron precargar:', error);
+      });
+
+      // Event listeners para modales
+      window.addEventListener('click', (e) => {
+        if (e.target.classList.contains('modal')) {
+          e.target.style.display = 'none';
+        }
       });
     });
 
@@ -784,6 +1289,7 @@
       setTimeout(() => {
         if (document.getElementById('gameScreen').style.display !== 'none') {
           renderBoard();
+          updateLevelPreview();
         }
       }, 100);
     });
@@ -792,6 +1298,7 @@
     window.addEventListener('resize', debounce(() => {
       if (document.getElementById('gameScreen').style.display !== 'none') {
         renderBoard();
+        updateLevelPreview();
       }
     }, 250));
 
@@ -807,7 +1314,14 @@
         timeout = setTimeout(later, wait);
       };
     }
+
+    // Probabilidades utilizadas en el sistema de generación
+    console.log('📊 Sistema de probabilidades implementado:');
+    console.log('   • 1 nivel: 100%');
+    console.log('   • 2 niveles: 70%, 30%');
+    console.log('   • 3 niveles: 50%, 30%, 20%');
+    console.log('   • 4 niveles: 40%, 30%, 20%, 10%');
+    console.log('   • 5+ niveles: 35%, 25%, 20%, 15%, 5% cada uno');
   </script>
 </body>
 </html>
-      

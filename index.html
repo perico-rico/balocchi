@@ -602,17 +602,56 @@
     @media (max-width: 768px) {
       .header-layout {
         flex-direction: column;
-        gap: 15px;
+        height: auto;
+        gap: 10px;
       }
       
-      .score-section, .level-section {
+      .left-space {
+        display: none;
+      }
+      
+      .score-section, .level-section, .next-tile-section {
         min-width: auto;
         width: 100%;
       }
       
-      h1 { font-size: 2rem; }
       .level-value { font-size: 2rem; }
-      .preview-tile { width: 25px; height: 25px; font-size: 8px; }
+      .preview-tile { width: 50px; height: 50px; font-size: 12px; }
+      
+      .main-layout {
+        flex-direction: column;
+      }
+      
+      .controls-column {
+        flex-direction: row;
+        justify-content: center;
+        flex-wrap: wrap;
+        order: 2;
+      }
+      
+      .game-area {
+        order: 1;
+      }
+    }
+    
+    /* Forzar orientación vertical en móviles */
+    @media screen and (orientation: landscape) and (max-width: 768px) {
+      body::before {
+        content: "Por favor, gira tu dispositivo a posición vertical";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.9);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 9999;
+        font-size: 24px;
+        text-align: center;
+      }
     }
   </style>
 </head>
@@ -1275,38 +1314,62 @@
       }
     }
 
-    // Precargar imágenes
+    // Precargar imágenes con manejo robusto de errores
     function preloadImages() {
-      return new Promise((resolve, reject) => {
-        const loadingIndicator = document.getElementById('loadingIndicator');
-        loadingIndicator.style.display = 'flex';
-        loadingIndicator.style.alignItems = 'center';
-        
-        Object.assign(TILE_IMAGES, generateTileImages(currentTheme));
-        
-        const imagePromises = Object.values(TILE_IMAGES).map(url => {
-          return new Promise((resolveImg, rejectImg) => {
-            const img = new Image();
-            img.onload = () => resolveImg(url);
-            img.onerror = () => {
-              console.warn(`⚠️ No se pudo cargar: ${url}`);
-              resolveImg(url);
-            };
-            img.src = url;
+      return new Promise((resolve) => {
+        try {
+          const loadingIndicator = document.getElementById('loadingIndicator');
+          if (loadingIndicator) {
+            loadingIndicator.style.display = 'flex';
+            loadingIndicator.style.alignItems = 'center';
+          }
+          
+          // Generar URLs para tema actual
+          Object.assign(TILE_IMAGES, generateTileImages(currentTheme));
+          
+          console.log(`Precargando imágenes del tema: ${currentTheme}`);
+          
+          const imagePromises = Object.values(TILE_IMAGES).map(url => {
+            return new Promise((resolveImg) => {
+              const img = new Image();
+              img.onload = () => {
+                console.log(`✅ Cargada: ${url}`);
+                resolveImg(url);
+              };
+              img.onerror = () => {
+                console.warn(`⚠️ No se pudo cargar: ${url}`);
+                resolveImg(url); // Resolver siempre para continuar
+              };
+              img.src = url;
+              
+              // Timeout de seguridad
+              setTimeout(() => {
+                console.warn(`⏰ Timeout para: ${url}`);
+                resolveImg(url);
+              }, 5000);
+            });
           });
-        });
 
-        Promise.all(imagePromises)
-          .then(() => {
-            loadingIndicator.style.display = 'none';
-            console.log('✅ Recursos cargados correctamente');
-            resolve();
-          })
-          .catch(error => {
-            loadingIndicator.style.display = 'none';
-            console.error('❌ Error cargando recursos:', error);
-            resolve();
-          });
+          Promise.all(imagePromises)
+            .then(() => {
+              if (loadingIndicator) {
+                loadingIndicator.style.display = 'none';
+              }
+              console.log('✅ Precarga de imágenes completada');
+              resolve();
+            })
+            .catch((error) => {
+              if (loadingIndicator) {
+                loadingIndicator.style.display = 'none';
+              }
+              console.warn('⚠️ Error en precarga de imágenes:', error);
+              resolve(); // Resolver siempre para continuar el juego
+            });
+            
+        } catch (error) {
+          console.error('❌ Error crítico en preloadImages:', error);
+          resolve(); // Resolver para permitir que el juego continúe
+        }
       });
     }
 

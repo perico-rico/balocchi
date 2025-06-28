@@ -19,209 +19,118 @@
       margin: 0;
       color: white;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      padding: 5px;
+      padding: 10px;
       box-sizing: border-box;
       overflow-x: hidden;
       min-height: 100vh;
     }
-    
-    .header-layout {
+    .container {
+      width: 100vw;
+      max-width: 100vw;
       display: flex;
-      align-items: center;
-      justify-content: flex-end;
-      margin-bottom: 15px;
-      gap: 20px;
-      height: 120px;
+      flex-direction: column;
+      box-sizing: border-box;
+      min-height: 100vh;
     }
-    
-    .left-space {
-      flex: 1;
-      min-width: 200px;
+    .game-layout {
+      display: grid;
+      grid-template-columns: 1fr 2fr 200px;
+      grid-template-rows: auto auto 1fr;
+      gap: 15px;
+      height: 100vh;
+      padding: 10px;
+      grid-template-areas:
+        "future-space top-stats top-stats"
+        "future-space level-preview level-preview"
+        "future-space game-area controls";
+    }
+    .future-space {
+      grid-area: future-space;
+      background: linear-gradient(135deg, #2d3748, #1a202c);
+      border-radius: 15px;
+      border: 2px solid rgba(79, 209, 197, 0.2);
       display: flex;
       align-items: center;
       justify-content: center;
       color: #666;
       font-style: italic;
     }
-    
-    .next-tile-section {
+    .top-stats {
+      grid-area: top-stats;
       display: flex;
-      flex-direction: column;
-      align-items: center;
-      min-width: 120px;
-    }
-    
-    .next-tile-label {
-      color: #a0aec0;
-      font-size: 12px;
-      margin-bottom: 5px;
-    }
-    
-    .score-section {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      min-width: 140px;
-    }
-    
-    .level-section {
-      min-width: 120px;
-      text-align: center;
-    }
-    
-    .main-layout {
-      display: flex;
-      gap: 20px;
-      align-items: flex-start;
-      min-height: calc(100vh - 200px);
-    }
-    
-    .game-area {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
+      gap: 15px;
       align-items: center;
     }
-    
-    .controls-column {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      padding: 20px 0;
-      min-width: 60px;
-    }
-    
-    .control-btn-circle {
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, #4a5568, #2d3748);
-      border: 2px solid rgba(79, 209, 197, 0.3);
-      color: white;
-      cursor: pointer;
-      font-size: 20px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.3s ease;
-    }
-    
-    .control-btn-circle:hover {
-      background: linear-gradient(135deg, #2d3748, #1a202c);
-      transform: scale(1.1);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    }
-    
-    .control-btn-circle:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-      transform: none;
-    }
-    
-    .control-btn-circle.bonus {
-      background: linear-gradient(135deg, #e53e3e, #c53030);
-    }
-    
-    .control-btn-circle.bonus:hover:not(:disabled) {
-      background: linear-gradient(135deg, #c53030, #9c2626);
-    }
-    
-    .current-score {
+    .stat-window {
       background: linear-gradient(135deg, #2d3748, #1a202c);
       padding: 15px;
       border-radius: 12px;
       border: 1px solid rgba(79, 209, 197, 0.3);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
       text-align: center;
+      flex: 1;
     }
-    
-    .score-label {
+    .stat-window.large {
+      flex: 2;
+      font-size: 2rem;
+      font-weight: bold;
+    }
+    .stat-label {
       font-size: 12px;
       color: #a0aec0;
       margin-bottom: 5px;
     }
-    
-    .score-value {
-      font-size: 24px;
+    .stat-value {
+      font-size: 18px;
       font-weight: bold;
       color: #4fd1c5;
     }
-    
-    .target-score {
-      background: linear-gradient(135deg, #e53e3e, #c53030);
-      padding: 12px;
-      border-radius: 10px;
-      text-align: center;
-      font-size: 12px;
-    }
-    
-    .target-position {
-      font-weight: bold;
-      margin-bottom: 3px;
-    }
-    
-    .target-points {
-      color: #fed7d7;
-    }
-    
-    .title-section {
-      text-align: center;
-      flex: 1;
-    }
-    
-    h1 {
-      background: linear-gradient(45deg, #4fd1c5, #38b2ac, #319795);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      font-size: 2.5rem;
-      margin: 0;
-      text-shadow: 0 0 30px rgba(79, 209, 197, 0.3);
-    }
-    
-    .level-section {
-      min-width: 120px;
-      text-align: center;
-    }
-    
-    .max-level-display {
-      background: linear-gradient(135deg, #805ad5, #6b46c1);
-      padding: 20px;
-      border-radius: 15px;
-      border: 2px solid rgba(128, 90, 213, 0.5);
-    }
-    
-    .level-label {
-      font-size: 14px;
-      color: #e9d8fd;
-      margin-bottom: 8px;
-    }
-    
-    .level-value {
+    .stat-value.large {
       font-size: 3rem;
+      color: #fff;
+    }
+    .level-preview-area {
+      grid-area: level-preview;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+    .level-preview {
+      display: flex;
+      justify-content: flex-start;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .preview-tile {
+      width: 60px;
+      height: 60px;
+      border-radius: 12px;
+      background-size: contain;
+      background-position: center;
+      background-repeat: no-repeat;
+      border: 2px solid rgba(79, 209, 197, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
       font-weight: bold;
       color: white;
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
     }
-    
-    .next-tile-section {
-      text-align: center;
-      margin: 20px 0;
+    .next-ficha-area {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-bottom: 10px;
     }
-    
-    .next-tile-label {
-      color: #a0aec0;
-      font-size: 15px;
-      margin-bottom: 8px;
-    }
-    
     .next-tile {
-      width: 100px;
-      height: 100px;
-      display: inline-flex;
+      width: 80px;
+      height: 80px;
+      display: flex;
       justify-content: center;
       align-items: center;
       border-radius: 12px;
-      font-size: 24px;
+      font-size: 20px;
       background-size: contain;
       background-position: center;
       background-repeat: no-repeat;
@@ -229,81 +138,55 @@
       font-weight: bold;
       text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
       box-shadow: 0 0 20px rgba(79, 209, 197, 0.4);
-      animation: pulse 2s infinite;
-      position: relative;
     }
-    
-    .next-tile-number {
-      position: absolute;
-      bottom: 5px;
-      right: 5px;
-      background: rgba(0,0,0,0.7);
-      color: white;
-      padding: 2px 6px;
-      border-radius: 4px;
-      font-size: 14px;
-      font-weight: bold;
-      transition: opacity 0.3s ease;
-    }
-    
-    .next-tile-number.hidden {
-      opacity: 0;
-    }
-    
-    @keyframes pulse {
-      0%, 100% { box-shadow: 0 0 20px rgba(79, 209, 197, 0.4); }
-      50% { box-shadow: 0 0 30px rgba(79, 209, 197, 0.7); }
-    }
-    
-    .level-preview {
-      display: flex;
-      justify-content: center;
-      gap: 5px;
-      margin: 15px 0;
-      flex-wrap: wrap;
-    }
-    
-    .preview-label {
+    .next-tile-label {
       color: #a0aec0;
-      font-size: 13px;
-      margin-bottom: 5px;
-      text-align: center;
+      font-size: 14px;
+      margin-right: 10px;
     }
-    
-    .preview-tile {
-      width: 30px;
-      height: 30px;
-      border-radius: 6px;
-      background-size: contain;
-      background-position: center;
-      background-repeat: no-repeat;
-      border: 1px solid rgba(79, 209, 197, 0.3);
+    .game-area {
+      grid-area: game-area;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .controls-area {
+      grid-area: controls;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      align-items: center;
+    }
+    .control-btn-circular {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #4a5568, #2d3748);
+      border: 2px solid rgba(79, 209, 197, 0.3);
+      color: white;
+      cursor: pointer;
+      font-size: 18px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 10px;
-      font-weight: bold;
-      color: white;
-      text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
-      position: relative;
+      transition: all 0.3s ease;
     }
-    
-    .preview-number {
-      position: absolute;
-      bottom: 1px;
-      right: 1px;
-      background: rgba(0,0,0,0.8);
-      color: white;
-      padding: 1px 3px;
-      border-radius: 2px;
-      font-size: 8px;
-      transition: opacity 0.3s ease;
+    .control-btn-circular:hover {
+      background: linear-gradient(135deg, #2d3748, #1a202c);
+      transform: scale(1.1);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     }
-    
-    .preview-number.hidden {
-      opacity: 0;
+    .control-btn-circular:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
     }
-    
+    .control-btn-circular.bonus {
+      background: linear-gradient(135deg, #e53e3e, #c53030);
+    }
+    .control-btn-circular.bonus:hover:not(:disabled) {
+      background: linear-gradient(135deg, #c53030, #9c2626);
+    }
     .tile {
       display: flex;
       justify-content: center;
@@ -319,54 +202,80 @@
       border: 2px solid rgba(79, 209, 197, 0.3);
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     }
-    
-    .tile-text {
+    .tile::before {
+      content: '';
       position: absolute;
-      bottom: 5px;
-      right: 5px;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-size: contain;
+      background-position: center;
+      background-repeat: no-repeat;
+      z-index: 1;
+    }
+    .tile-text {
+      position: relative;
+      z-index: 2;
       font-weight: bold;
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.9);
+      text-shadow: 3px 3px 6px rgba(0,0,0,0.9);
       color: white;
-      background: rgba(0,0,0,0.7);
-      padding: 2px 6px;
-      border-radius: 4px;
-      font-size: 14px;
+      background: rgba(0,0,0,0.4);
+      padding: 4px 8px;
+      border-radius: 8px;
+      backdrop-filter: blur(4px);
       transition: opacity 0.3s ease;
     }
-    
     .tile-text.hidden {
       opacity: 0;
     }
-    
+    .next-tile {
+      width: 100px;
+      height: 100px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 12px;
+      font-size: 24px;
+      margin-bottom: 15px;
+      background-size: contain;
+      background-position: center;
+      background-repeat: no-repeat;
+      border: 3px solid #4fd1c5;
+      font-weight: bold;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+      box-shadow: 0 0 20px rgba(79, 209, 197, 0.4);
+      animation: pulse 2s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { box-shadow: 0 0 20px rgba(79, 209, 197, 0.4); }
+      50% { box-shadow: 0 0 30px rgba(79, 209, 197, 0.7); }
+    }
     .tile.selected {
       transform: scale(1.1);
       box-shadow: 0 0 25px rgba(0, 255, 0, 0.8);
       z-index: 10;
       border-color: #00ff00;
     }
-    
     .tile.merged {
       animation: merge 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
     }
-    
     @keyframes merge {
       0% { transform: scale(1); }
       30% { transform: scale(1.5) rotate(5deg); }
       60% { transform: scale(1.2) rotate(-3deg); }
       100% { transform: scale(1) rotate(0deg); }
     }
-    
     #gameBoard {
       display: grid;
-      gap: 12px;
+      gap: 8px;
       background: linear-gradient(135deg, #2d3748, #1a202c);
       padding: 20px;
-      border-radius: 15px;
-      margin: 15px 0;
+      border-radius: 20px;
       border: 2px solid rgba(79, 209, 197, 0.2);
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      width: fit-content;
     }
-    
     #optionsScreen, #gameScreen {
       text-align: center;
       width: 100%;
@@ -375,15 +284,12 @@
       align-items: center;
       justify-content: center;
     }
-    
     #optionsScreen {
       display: flex;
     }
-    
     #gameScreen {
       display: none;
     }
-    
     #optionsScreen select, #optionsScreen input {
       margin: 10px;
       padding: 15px;
@@ -395,13 +301,11 @@
       color: white;
       transition: all 0.3s ease;
     }
-    
     #optionsScreen select:focus, #optionsScreen input:focus {
       outline: none;
       box-shadow: 0 0 15px rgba(79, 209, 197, 0.5);
       transform: scale(1.02);
     }
-    
     #optionsScreen button {
       padding: 15px 30px;
       font-size: 18px;
@@ -415,12 +319,27 @@
       transition: all 0.3s ease;
       box-shadow: 0 6px 20px rgba(79, 209, 197, 0.3);
     }
-    
     #optionsScreen button:hover {
       transform: translateY(-2px) scale(1.05);
       box-shadow: 0 10px 25px rgba(79, 209, 197, 0.5);
     }
-    
+    .game-stats {
+      display: flex;
+      justify-content: space-around;
+      width: 100%;
+      max-width: 450px;
+      margin: 20px 0;
+      gap: 10px;
+    }
+    .stat-item {
+      text-align: center;
+      background: linear-gradient(135deg, #2d3748, #1a202c);
+      padding: 15px;
+      border-radius: 12px;
+      min-width: 90px;
+      border: 1px solid rgba(79, 209, 197, 0.3);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
     .game-controls {
       margin: 20px 0;
       display: flex;
@@ -428,7 +347,6 @@
       justify-content: center;
       gap: 10px;
     }
-    
     .control-btn {
       padding: 12px 20px;
       background: linear-gradient(135deg, #4a5568, #2d3748);
@@ -441,27 +359,50 @@
       transition: all 0.3s ease;
       border: 1px solid rgba(79, 209, 197, 0.3);
     }
-    
     .control-btn:hover {
       background: linear-gradient(135deg, #2d3748, #1a202c);
       transform: translateY(-1px);
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     }
-    
     .control-btn:disabled {
       opacity: 0.5;
       cursor: not-allowed;
       transform: none;
     }
-    
     .control-btn.bonus {
       background: linear-gradient(135deg, #e53e3e, #c53030);
     }
-    
     .control-btn.bonus:hover:not(:disabled) {
       background: linear-gradient(135deg, #c53030, #9c2626);
     }
-    
+    .loading-indicator {
+      display: none;
+      margin: 15px 0;
+      color: #4fd1c5;
+      font-weight: 500;
+    }
+    .loading-spinner {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 2px solid rgba(79, 209, 197, 0.3);
+      border-top: 2px solid #4fd1c5;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-right: 10px;
+    }
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    h1 {
+      background: linear-gradient(45deg, #4fd1c5, #38b2ac, #319795);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-size: 2.8rem;
+      margin-bottom: 25px;
+      text-shadow: 0 0 30px rgba(79, 209, 197, 0.3);
+    }
     .instructions {
       background: linear-gradient(135deg, #2d3748, #1a202c);
       padding: 20px;
@@ -470,7 +411,29 @@
       border: 2px solid rgba(79, 209, 197, 0.2);
       box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
     }
-    
+    .level-preview {
+      display: flex;
+      justify-content: center;
+      gap: 5px;
+      margin: 10px 0;
+      flex-wrap: wrap;
+    }
+    .preview-tile {
+      width: 30px;
+      height: 30px;
+      border-radius: 6px;
+      background-size: contain;
+      background-position: center;
+      background-repeat: no-repeat;
+      border: 1px solid rgba(79, 209, 197, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: bold;
+      color: white;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+    }
     .modal {
       position: fixed;
       top: 0;
@@ -483,7 +446,6 @@
       align-items: center;
       z-index: 1000;
     }
-    
     .modal-content {
       background: linear-gradient(135deg, #2d3748, #1a202c);
       padding: 30px;
@@ -492,14 +454,12 @@
       max-width: 400px;
       width: 90%;
     }
-    
     .theme-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
       gap: 15px;
       margin: 20px 0;
     }
-    
     .theme-option {
       padding: 15px;
       border: 2px solid rgba(79, 209, 197, 0.3);
@@ -508,40 +468,33 @@
       transition: all 0.3s ease;
       text-align: center;
     }
-    
     .theme-option:hover, .theme-option.selected {
       border-color: #4fd1c5;
       background: rgba(79, 209, 197, 0.1);
     }
-    
     .records-modal {
       max-width: 600px;
     }
-    
     .records-table {
       width: 100%;
       border-collapse: collapse;
       margin: 20px 0;
     }
-    
     .records-table th,
     .records-table td {
       padding: 10px;
       text-align: left;
       border-bottom: 1px solid rgba(79, 209, 197, 0.3);
     }
-    
     .records-table th {
       background: rgba(79, 209, 197, 0.2);
     }
-    
     .tile-chooser {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
       gap: 10px;
       margin: 20px 0;
     }
-    
     .tile-choice {
       width: 50px;
       height: 50px;
@@ -558,100 +511,17 @@
       color: white;
       text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
       transition: all 0.3s ease;
-      position: relative;
     }
-    
     .tile-choice:hover {
       border-color: #4fd1c5;
       transform: scale(1.1);
     }
-    
-    .tile-choice-number {
-      position: absolute;
-      bottom: 2px;
-      right: 2px;
-      background: rgba(0,0,0,0.8);
-      color: white;
-      padding: 1px 3px;
-      border-radius: 2px;
-      font-size: 10px;
-    }
-    
-    .loading-indicator {
-      display: none;
-      margin: 15px 0;
-      color: #4fd1c5;
-      font-weight: 500;
-    }
-    
-    .loading-spinner {
-      display: inline-block;
-      width: 20px;
-      height: 20px;
-      border: 2px solid rgba(79, 209, 197, 0.3);
-      border-top: 2px solid #4fd1c5;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-      margin-right: 10px;
-    }
-    
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-    
-    @media (max-width: 768px) {
-      .header-layout {
-        flex-direction: column;
-        height: auto;
-        gap: 10px;
-      }
-      
-      .left-space {
-        display: none;
-      }
-      
-      .score-section, .level-section, .next-tile-section {
-        min-width: auto;
-        width: 100%;
-      }
-      
-      .level-value { font-size: 2rem; }
-      .preview-tile { width: 50px; height: 50px; font-size: 12px; }
-      
-      .main-layout {
-        flex-direction: column;
-      }
-      
-      .controls-column {
-        flex-direction: row;
-        justify-content: center;
-        flex-wrap: wrap;
-        order: 2;
-      }
-      
-      .game-area {
-        order: 1;
-      }
-    }
-    
-    /* Forzar orientación vertical en móviles */
-    @media screen and (orientation: landscape) and (max-width: 768px) {
-      body::before {
-        content: "Por favor, gira tu dispositivo a posición vertical";
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.9);
-        color: white;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        z-index: 9999;
-        font-size: 24px;
-        text-align: center;
-      }
+    @media (max-width: 480px) {
+      h1 { font-size: 2.2rem; }
+      .game-stats { flex-direction: column; gap: 8px; }
+      .stat-item { min-width: auto; }
+      #optionsScreen select, #optionsScreen input { width: 200px; }
+      .preview-tile { width: 25px; height: 25px; font-size: 8px; }
     }
   </style>
 </head>
@@ -705,65 +575,74 @@
     </div>
 
     <div id="gameScreen">
-      <div class="header-layout">
-        <div class="left-space">
-          <!-- Espacio reservado para futuro logo -->
+      <div class="game-layout">
+        <!-- Espacio futuro para Gemavision -->
+        <div class="future-space">
+          <div>Espacio reservado<br>para Gemavision</div>
         </div>
-        
-        <div class="next-tile-section">
-          <div class="next-tile-label">Próxima Ficha:</div>
-          <div id="nextTile"></div>
-        </div>
-        
-        <div class="score-section">
-          <div class="current-score">
-            <div class="score-label">Puntuación Actual</div>
-            <div class="score-value" id="score">0</div>
-          </div>
-          <div class="target-score" id="targetScore">
-            <div class="target-position">5º Posición</div>
-            <div class="target-points">Meta: 0 puntos</div>
-          </div>
-        </div>
-        
-        <div class="level-section">
-          <div class="max-level-display">
-            <div class="level-label">Nivel Máximo</div>
-            <div class="level-value" id="maxLevelDisplay">7</div>
-          </div>
-        </div>
-      </div>
 
-      <div style="margin: 15px 0;">
-        <div class="preview-label">Niveles Disponibles:</div>
-        <div id="levelPreview" class="level-preview"></div>
-      </div>
+        <!-- Stats superiores -->
+        <div class="top-stats">
+          <div class="stat-window">
+            <div class="stat-label">Puntuación Actual</div>
+            <div class="stat-value" id="score">0</div>
+          </div>
+          <div class="stat-window">
+            <div class="stat-label">Récord a Superar</div>
+            <div class="stat-value" id="nextRecord">---</div>
+          </div>
+          <div class="stat-window large">
+            <div class="stat-label">Nivel Máximo</div>
+            <div class="stat-value large" id="maxLevelDisplay">7</div>
+          </div>
+        </div>
 
-      <div class="main-layout">
+        <!-- Niveles disponibles -->
+        <div class="level-preview-area">
+          <div class="next-ficha-area">
+            <span class="next-tile-label">Próxima:</span>
+            <div id="nextTile" class="next-tile"></div>
+            <div class="stat-window">
+              <div class="stat-label">Movimientos</div>
+              <div class="stat-value" id="moves">0</div>
+            </div>
+            <div class="stat-window">
+              <div class="stat-label">Nivel Max Alcanzado</div>
+              <div class="stat-value" id="maxReached">1</div>
+            </div>
+          </div>
+          <div>
+            <div style="color: #a0aec0; font-size: 13px; margin-bottom: 5px;">Niveles Disponibles:</div>
+            <div id="levelPreview" class="level-preview"></div>
+          </div>
+        </div>
+
+        <!-- Área del juego -->
         <div class="game-area">
           <div id="gameBoard"></div>
         </div>
-        
-        <div class="controls-column">
-          <button class="control-btn-circle" onclick="toggleNumbers()" title="Mostrar/Ocultar números">
+
+        <!-- Controles circulares -->
+        <div class="controls-area">
+          <button class="control-btn-circular" onclick="toggleNumbers()" title="Mostrar/Ocultar Números">
             🔢
           </button>
-          <button class="control-btn-circle bonus" id="bonusBtn" onclick="showBonusModal()" title="Cambiar ficha">
+          <button class="control-btn-circular bonus" id="bonusBtn" onclick="showBonusModal()" title="Cambiar Ficha">
             ⭐
           </button>
-          <button class="control-btn-circle bonus" id="undoBtn" onclick="undoMove()" title="Deshacer">
+          <button class="control-btn-circular bonus" id="undoBtn" onclick="undoMove()" title="Deshacer">
             ↶
           </button>
-          <button class="control-btn-circle" onclick="restartGame()" title="Nueva partida">
+          <button class="control-btn-circular" onclick="restartGame()" title="Nueva Partida">
             🔄
           </button>
-          <button class="control-btn-circle" onclick="backToMenu()" title="Menú principal">
+          <button class="control-btn-circular" onclick="backToMenu()" title="Menú Principal">
             🏠
           </button>
-          <button class="control-btn-circle" onclick="showRecords()" title="Ver récords">
+          <button class="control-btn-circular" onclick="showRecords()" title="Récords">
             🏆
           </button>
-          <button class="control-btn-circle" onclick="exitGame()" title="Salir">
+          <button class="control-btn-circular" onclick="exitGame()" title="Salir">
             ❌
           </button>
         </div>
@@ -772,6 +651,35 @@
   </div>
 
   <!-- Modales -->
+  <div id="themeModal" class="modal" style="display: none;">
+    <div class="modal-content">
+      <h2>🎨 Seleccionar Tema</h2>
+      <div class="theme-grid">
+        <div class="theme-option" data-theme="diamonds">
+          <div>💎</div>
+          <div>Diamantes</div>
+        </div>
+        <div class="theme-option" data-theme="frutas">
+          <div>🍎</div>
+          <div>Frutas</div>
+        </div>
+        <div class="theme-option" data-theme="frutas2">
+          <div>🍓</div>
+          <div>Frutas 2</div>
+        </div>
+        <div class="theme-option" data-theme="flores">
+          <div>🌸</div>
+          <div>Flores</div>
+        </div>
+        <div class="theme-option" data-theme="vegetales">
+          <div>🥬</div>
+          <div>Vegetales</div>
+        </div>
+      </div>
+      <button class="control-btn" onclick="closeModal('themeModal')">Cerrar</button>
+    </div>
+  </div>
+
   <div id="bonusModal" class="modal" style="display: none;">
     <div class="modal-content">
       <h2>⭐ Cambiar Próxima Ficha</h2>
@@ -821,9 +729,11 @@
     let boardSizeY = 5;
     let board = [];
     let score = 0;
+    let moves = 0;
     let selectedTile = null;
     let nextTileLevel = 0;
     let maxLevel = 7;
+    let maxReachedLevel = 1;
     let playerNick = 'Jugador';
     let gameStartTime = 0;
     let showNumbers = true;
@@ -831,7 +741,6 @@
     let bonusesLeft = 3;
     let undosLeft = 3;
     let gameHistory = [];
-    let currentTargetRecord = null;
 
     // Sistema de temas
     const THEMES = {
@@ -924,102 +833,25 @@
       return Array.from(levels).sort((a, b) => a - b);
     }
 
-    // Contar fichas por nivel
-    function countTilesByLevel() {
-      const counts = {};
-      for (let i = 0; i < boardSizeY; i++) {
-        for (let j = 0; j < boardSizeX; j++) {
-          if (board[i][j]) {
-            const level = board[i][j].level;
-            counts[level] = (counts[level] || 0) + 1;
-          }
-        }
-      }
-      return counts;
-    }
-
-    // Encontrar pares adyacentes del mismo nivel
-    function findAdjacentPairs() {
-      const pairs = [];
-      for (let i = 0; i < boardSizeY; i++) {
-        for (let j = 0; j < boardSizeX; j++) {
-          if (board[i][j]) {
-            const level = board[i][j].level;
-            // Comprobar adyacentes
-            const adjacent = [
-              [i-1, j], [i+1, j], [i, j-1], [i, j+1]
-            ];
-            
-            for (let [ai, aj] of adjacent) {
-              if (ai >= 0 && ai < boardSizeY && aj >= 0 && aj < boardSizeX && 
-                  board[ai][aj] && board[ai][aj].level === level) {
-                const pairKey = `${Math.min(i,ai)},${Math.min(j,aj)}-${Math.max(i,ai)},${Math.max(j,aj)}`;
-                if (!pairs.find(p => p.key === pairKey)) {
-                  pairs.push({
-                    key: pairKey,
-                    level: level,
-                    positions: [[i,j], [ai,aj]]
-                  });
-                }
-              }
-            }
-          }
-        }
-      }
-      return pairs;
-    }
-
-    // Generar próxima ficha con lógica inteligente mejorada
+    // Generar próxima ficha con lógica inteligente
     function generateNextTileLevel() {
       const presentLevels = getBoardLevels();
-      const levelCounts = countTilesByLevel();
-      const adjacentPairs = findAdjacentPairs();
-      
       if (presentLevels.length === 0) {
-        return 0; // Tablero vacío
+        return 0; // Tablero vacío, empezar con nivel 0
       }
 
       const minLevel = Math.min(...presentLevels);
       const maxPresentLevel = Math.max(...presentLevels);
-      const totalTiles = boardSizeX * boardSizeY;
-      
-      // Regla 1: Anti-bloqueo - Si solo quedan 2 fichas de un nivel bajo y todas las demás son superiores
-      for (let level of presentLevels) {
-        if (levelCounts[level] === 2) {
-          const otherTilesCount = totalTiles - 2;
-          const higherLevelTiles = Object.entries(levelCounts)
-            .filter(([l, count]) => parseInt(l) > level)
-            .reduce((sum, [l, count]) => sum + count, 0);
-          
-          if (higherLevelTiles === otherTilesCount) {
-            // Solo quedan 2 fichas de este nivel, no generarlo más
-            const validLevels = presentLevels.filter(l => l > level);
-            if (validLevels.length > 0) {
-              return Math.min(...validLevels);
-            }
-          }
-        }
-      }
-      
-      // Regla 2: Última combinación - Si solo hay un par adyacente de un nivel, la nueva será X+1
-      const singlePairs = adjacentPairs.filter(pair => {
-        return levelCounts[pair.level] === 2;
-      });
-      
-      if (singlePairs.length === 1) {
-        const targetLevel = Math.min(singlePairs[0].level + 1, maxLevel - 1);
-        return targetLevel;
-      }
-
-      // Lógica normal con límites dinámicos
       const maxValidLevel = Math.max(0, maxPresentLevel - 2);
+      
+      // Crear array de niveles válidos (que existen en tablero)
       const validLevels = presentLevels.filter(level => level <= maxValidLevel);
       
       if (validLevels.length === 0) {
-        return minLevel;
+        return minLevel; // Fallback
       }
 
-      // Sistema de probabilidades ponderadas
+      // Sistema de probabilidades ponderadas (favorece niveles bajos)
       const weights = [];
       if (validLevels.length === 1) {
         weights.push(100);
@@ -1047,74 +879,19 @@
         }
       }
       
-      return validLevels[0];
-    }
-
-    // Actualizar display del récord objetivo
-    function updateTargetScore() {
-      const modalityKey = getModalityKey();
-      const records = getRecords(modalityKey);
-      
-      if (records.length === 0) {
-        currentTargetRecord = null;
-        document.getElementById('targetScore').innerHTML = `
-          <div class="target-position">Sin récords</div>
-          <div class="target-points">¡Sé el primero!</div>
-        `;
-        return;
-      }
-      
-      // Encontrar el récord más bajo que sea superior a la puntuación actual
-      let targetRecord = null;
-      for (let i = records.length - 1; i >= 0; i--) {
-        if (records[i].score > score) {
-          targetRecord = { ...records[i], position: i + 1 };
-          break;
-        }
-      }
-      
-      if (!targetRecord) {
-        // Ya superaste todos los récords
-        document.getElementById('targetScore').innerHTML = `
-          <div class="target-position">¡Nuevo Récord!</div>
-          <div class="target-points">¡Increíble!</div>
-        `;
-      } else {
-        const position = targetRecord.position === 1 ? '1º' : 
-                        targetRecord.position === 2 ? '2º' : 
-                        targetRecord.position === 3 ? '3º' : 
-                        `${targetRecord.position}º`;
-        
-        document.getElementById('targetScore').innerHTML = `
-          <div class="target-position">${position} Posición</div>
-          <div class="target-points">Meta: ${targetRecord.score.toLocaleString()}</div>
-        `;
-      }
-      
-      currentTargetRecord = targetRecord;
+      return validLevels[0]; // Fallback
     }
 
     // Actualizar preview de niveles
     function updateLevelPreview() {
       const preview = document.getElementById('levelPreview');
-      if (!preview) {
-        console.warn('⚠️ levelPreview element no encontrado');
-        return;
-      }
-      
       preview.innerHTML = '';
       
       for (let i = 0; i < maxLevel; i++) {
         const tile = document.createElement('div');
         tile.className = 'preview-tile';
         tile.style.backgroundImage = `url('${getTileImage(i)}')`;
-        
-        const number = document.createElement('div');
-        number.className = 'preview-number';
-        if (!showNumbers) number.classList.add('hidden');
-        number.textContent = i + 1;
-        
-        tile.appendChild(number);
+        tile.textContent = i + 1;
         preview.appendChild(tile);
       }
     }
@@ -1122,8 +899,6 @@
     // Toggle mostrar/ocultar números
     function toggleNumbers() {
       showNumbers = !showNumbers;
-      const toggleText = document.getElementById('numbersToggleText');
-      toggleText.textContent = showNumbers ? '🔢 Ocultar Números' : '🔢 Mostrar Números';
       
       // Aplicar a todas las fichas existentes
       document.querySelectorAll('.tile-text').forEach(text => {
@@ -1131,13 +906,14 @@
       });
       
       // Aplicar a siguiente ficha
-      document.querySelectorAll('.next-tile-number').forEach(number => {
-        number.classList.toggle('hidden', !showNumbers);
-      });
+      const nextTileElement = document.querySelector('.next-tile');
+      if (nextTileElement) {
+        nextTileElement.style.color = showNumbers ? 'white' : 'transparent';
+      }
       
-      // Aplicar a preview
-      document.querySelectorAll('.preview-number').forEach(number => {
-        number.classList.toggle('hidden', !showNumbers);
+      // Aplicar a preview de niveles
+      document.querySelectorAll('.preview-tile').forEach(tile => {
+        tile.style.color = showNumbers ? 'white' : 'transparent';
       });
     }
 
@@ -1158,13 +934,8 @@
         const tile = document.createElement('div');
         tile.className = 'tile-choice';
         tile.style.backgroundImage = `url('${getTileImage(i)}')`;
+        tile.textContent = showNumbers ? (i + 1) : '';
         tile.onclick = () => useBonusChangeTitle(i);
-        
-        const number = document.createElement('div');
-        number.className = 'tile-choice-number';
-        number.textContent = i + 1;
-        tile.appendChild(number);
-        
         chooser.appendChild(tile);
       }
       
@@ -1187,7 +958,9 @@
           row.map(cell => cell ? { level: cell.level } : null)
         ))),
         score,
-        nextTileLevel
+        moves,
+        nextTileLevel,
+        maxReachedLevel
       };
       
       gameHistory.push(state);
@@ -1204,7 +977,9 @@
       
       // Restaurar estado
       score = previousState.score;
+      moves = previousState.moves;
       nextTileLevel = previousState.nextTileLevel;
+      maxReachedLevel = previousState.maxReachedLevel;
       
       // Limpiar tablero actual
       const gameBoard = document.getElementById('gameBoard');
@@ -1231,15 +1006,54 @@
     }
 
     function updateBonusButtons() {
-      document.getElementById('bonusCount').textContent = bonusesLeft;
-      document.getElementById('undoCount').textContent = undosLeft;
-      document.getElementById('bonusBtn').disabled = bonusesLeft <= 0;
-      document.getElementById('undoBtn').disabled = undosLeft <= 0;
+      const bonusBtn = document.getElementById('bonusBtn');
+      const undoBtn = document.getElementById('undoBtn');
+      
+      bonusBtn.disabled = bonusesLeft <= 0;
+      undoBtn.disabled = undosLeft <= 0;
+      
+      bonusBtn.title = `Cambiar Ficha (${bonusesLeft})`;
+      undoBtn.title = `Deshacer (${undosLeft})`;
     }
 
-    // Sistema de récords por modalidad
-    function getModalityKey() {
-      return `${boardSizeX}x${boardSizeY}_${maxLevel}`;
+    // Actualizar próximo récord a superar
+    function updateNextRecord() {
+      const modalityKey = getModalityKey();
+      const records = getRecords(modalityKey);
+      const nextRecordElement = document.getElementById('nextRecord');
+      
+      if (records.length === 0) {
+        nextRecordElement.textContent = '---';
+        return;
+      }
+      
+      // Buscar el próximo récord a superar
+      const higherRecords = records.filter(record => record.score > score);
+      
+      if (higherRecords.length === 0) {
+        nextRecordElement.textContent = '¡Eres #1!';
+      } else {
+        const nextRecord = higherRecords[higherRecords.length - 1]; // El más bajo de los superiores
+        nextRecordElement.textContent = nextRecord.score.toLocaleString();
+      }
+    }
+
+    // Calcular tamaño óptimo del tablero
+    function calculateOptimalBoardSize() {
+      const gameArea = document.querySelector('.game-area');
+      if (!gameArea) return 80; // Fallback
+      
+      const containerRect = gameArea.getBoundingClientRect();
+      const availableWidth = containerRect.width - 40; // Padding
+      const availableHeight = containerRect.height - 40;
+      
+      // Calcular tamaño basado en espacio disponible
+      const maxTileSize = Math.min(
+        Math.floor(availableWidth / boardSizeX) - 8,
+        Math.floor(availableHeight / boardSizeY) - 8
+      );
+      
+      return Math.max(60, Math.min(maxTileSize, 120)); // Entre 60 y 120px
     }
 
     function saveRecord() {
@@ -1247,8 +1061,7 @@
       const recordKey = `records_${modalityKey}`;
       
       // Contar fichas de nivel máximo
-      const levelCounts = countTilesByLevel();
-      const maxLevelTiles = levelCounts[maxLevel - 1] || 0;
+      const maxLevelTiles = getBoardLevels().filter(level => level === maxLevel - 1).length;
       
       const newRecord = {
         player: playerNick,
@@ -1319,70 +1132,44 @@
       }
     }
 
-    // Precargar imágenes con manejo robusto de errores
+    // Precargar imágenes con mejor manejo de errores
     function preloadImages() {
-      return new Promise((resolve) => {
-        try {
-          const loadingIndicator = document.getElementById('loadingIndicator');
-          if (loadingIndicator) {
-            loadingIndicator.style.display = 'flex';
-            loadingIndicator.style.alignItems = 'center';
-          }
-          
-          // Generar URLs para tema actual
-          Object.assign(TILE_IMAGES, generateTileImages(currentTheme));
-          
-          console.log(`Precargando imágenes del tema: ${currentTheme}`);
-          
-          const imagePromises = Object.values(TILE_IMAGES).map(url => {
-            return new Promise((resolveImg) => {
-              const img = new Image();
-              img.onload = () => {
-                console.log(`✅ Cargada: ${url}`);
-                resolveImg(url);
-              };
-              img.onerror = () => {
-                console.warn(`⚠️ No se pudo cargar: ${url}`);
-                resolveImg(url); // Resolver siempre para continuar
-              };
-              img.src = url;
-              
-              // Timeout de seguridad
-              setTimeout(() => {
-                console.warn(`⏰ Timeout para: ${url}`);
-                resolveImg(url);
-              }, 5000);
-            });
+      return new Promise((resolve, reject) => {
+        const loadingIndicator = document.getElementById('loadingIndicator');
+        loadingIndicator.style.display = 'flex';
+        loadingIndicator.style.alignItems = 'center';
+        
+        // Generar URLs para tema actual
+        Object.assign(TILE_IMAGES, generateTileImages(currentTheme));
+        
+        const imagePromises = Object.values(TILE_IMAGES).map(url => {
+          return new Promise((resolveImg, rejectImg) => {
+            const img = new Image();
+            img.onload = () => resolveImg(url);
+            img.onerror = () => {
+              console.warn(`⚠️ No se pudo cargar: ${url}`);
+              resolveImg(url); // Resolver en lugar de rechazar para continuar
+            };
+            img.src = url;
           });
+        });
 
-          Promise.all(imagePromises)
-            .then(() => {
-              if (loadingIndicator) {
-                loadingIndicator.style.display = 'none';
-              }
-              console.log('✅ Precarga de imágenes completada');
-              resolve();
-            })
-            .catch((error) => {
-              if (loadingIndicator) {
-                loadingIndicator.style.display = 'none';
-              }
-              console.warn('⚠️ Error en precarga de imágenes:', error);
-              resolve(); // Resolver siempre para continuar el juego
-            });
-            
-        } catch (error) {
-          console.error('❌ Error crítico en preloadImages:', error);
-          resolve(); // Resolver para permitir que el juego continúe
-        }
+        Promise.all(imagePromises)
+          .then(() => {
+            loadingIndicator.style.display = 'none';
+            console.log('✅ Recursos cargados correctamente');
+            resolve();
+          })
+          .catch(error => {
+            loadingIndicator.style.display = 'none';
+            console.error('❌ Error cargando recursos:', error);
+            resolve(); // Continuar aunque algunas imágenes fallen
+          });
       });
     }
 
     // Inicializar tablero de juego
     function initBoard() {
-      console.log('🎲 Inicializando tablero...');
-      
-      // Inicializar array del tablero
       board = Array(boardSizeY).fill().map(() => Array(boardSizeX).fill(null));
       
       // Crear fichas iniciales con distribución balanceada
@@ -1400,9 +1187,6 @@
       // Generar primera ficha siguiente
       nextTileLevel = generateNextTileLevel();
       
-      console.log(`✅ Tablero ${boardSizeX}x${boardSizeY} inicializado`);
-      
-      // Renderizar todo
       renderBoard();
       updateNextTile();
       updateLevelPreview();
@@ -1410,7 +1194,7 @@
       updateBonusButtons();
     }
 
-    // Crear elemento de ficha con tamaño dinámico
+    // Crear elemento de ficha mejorado
     function createTileElement(level, row, col) {
       const tile = document.createElement('div');
       tile.className = `tile level-${level}`;
@@ -1418,20 +1202,22 @@
       tile.dataset.col = col;
       tile.dataset.level = level;
       
+      // Crear texto del nivel
+      const tileText = document.createElement('div');
+      tileText.className = 'tile-text';
+      if (!showNumbers) {
+        tileText.classList.add('hidden');
+      }
+      tileText.textContent = level + 1;
+      tile.appendChild(tileText);
+      
       // Aplicar imagen de fondo
       const imageUrl = getTileImage(level);
       tile.style.backgroundImage = `url('${imageUrl}')`;
       
-      // Crear texto del nivel (abajo derecha)
-      const tileText = document.createElement('div');
-      tileText.className = 'tile-text';
-      if (!showNumbers) tileText.classList.add('hidden');
-      tileText.textContent = level + 1;
-      tile.appendChild(tileText);
+      // El tamaño se aplicará en renderBoard()
       
-      // El tamaño se aplicará dinámicamente en renderBoard()
-      
-      // Eventos para móvil y escritorio
+      // Eventos mejorados para móvil y escritorio
       tile.addEventListener('touchstart', (e) => {
         e.preventDefault();
         handleTileClick(row, col);
@@ -1452,58 +1238,36 @@
       
       const tile = document.createElement('div');
       tile.className = 'next-tile';
+      tile.textContent = showNumbers ? (nextTileLevel + 1) : '';
       tile.style.backgroundImage = `url('${getTileImage(nextTileLevel)}')`;
       
-      const number = document.createElement('div');
-      number.className = 'next-tile-number';
-      if (!showNumbers) number.classList.add('hidden');
-      number.textContent = nextTileLevel + 1;
-      
-      tile.appendChild(number);
       nextTileContainer.appendChild(tile);
     }
 
-    // Renderizar tablero completo con tamaño expandido
+    // Renderizar tablero completo con tamaño adaptativo
     function renderBoard() {
-      // Verificar que board existe antes de renderizar
-      if (!board || !Array.isArray(board) || board.length === 0) {
-        console.warn('⚠️ Board no inicializado, saltando renderBoard');
-        return;
-      }
-      
       const gameBoard = document.getElementById('gameBoard');
-      if (!gameBoard) {
-        console.warn('⚠️ gameBoard element no encontrado');
-        return;
-      }
-      
       gameBoard.innerHTML = '';
       
-      // Calcular tamaño máximo aprovechando el espacio disponible
-      const viewportWidth = window.innerWidth;
-      const viewportHeight = window.innerHeight;
-      
-      // Espacio disponible: ancho total menos controles (80px) y márgenes
-      const availableWidth = viewportWidth - 120;
-      // Altura disponible: total menos header (140px) y preview (80px) y márgenes
-      const availableHeight = viewportHeight - 250;
-      
-      // Calcular tamaño de celda basado en limitaciones
-      const maxTileSizeByWidth = Math.floor((availableWidth - 60) / boardSizeX) - 12;
-      const maxTileSizeByHeight = Math.floor((availableHeight - 60) / boardSizeY) - 12;
-      
-      // Usar el menor de los dos para que quepa todo
-      const tileSize = Math.max(80, Math.min(maxTileSizeByWidth, maxTileSizeByHeight, 150));
+      // Calcular tamaño óptimo
+      const tileSize = calculateOptimalBoardSize();
       
       gameBoard.style.gridTemplateColumns = `repeat(${boardSizeX}, ${tileSize}px)`;
       gameBoard.style.gridTemplateRows = `repeat(${boardSizeY}, ${tileSize}px)`;
       
       for (let i = 0; i < boardSizeY; i++) {
         for (let j = 0; j < boardSizeX; j++) {
-          if (board[i] && board[i][j] && board[i][j].element) {
-            // Actualizar tamaño de las fichas existentes
+          if (board[i][j] && board[i][j].element) {
+            // Actualizar tamaño del elemento
             board[i][j].element.style.width = `${tileSize}px`;
             board[i][j].element.style.height = `${tileSize}px`;
+            
+            // Actualizar tamaño del texto
+            const textElement = board[i][j].element.querySelector('.tile-text');
+            if (textElement) {
+              textElement.style.fontSize = `${Math.max(14, tileSize * 0.2)}px`;
+            }
+            
             gameBoard.appendChild(board[i][j].element);
           }
         }
@@ -1515,6 +1279,7 @@
       if (!board[row][col]) return;
 
       if (!selectedTile) {
+        // Seleccionar ficha
         selectedTile = { row, col };
         board[row][col].element.classList.add('selected');
       } else {
@@ -1522,14 +1287,18 @@
         board[prevRow][prevCol].element.classList.remove('selected');
 
         if (row === prevRow && col === prevCol) {
+          // Deseleccionar la misma ficha
           selectedTile = null;
           return;
         }
 
         if (isAdjacent(row, col, prevRow, prevCol) && 
             board[row][col].level === board[prevRow][prevCol].level) {
+          // Guardar estado antes del movimiento
           saveGameState();
+          // Fusionar fichas
           mergeTiles(row, col, prevRow, prevCol);
+          moves++;
         }
         
         selectedTile = null;
@@ -1542,14 +1311,14 @@
              (Math.abs(col1 - col2) === 1 && row1 === row2);
     }
 
-    // Sistema de fusión mejorado
+    // Sistema de fusión mejorado con puntuación exponencial
     function mergeTiles(row, col, prevRow, prevCol) {
       const level = board[row][col].level;
       
       if (level >= maxLevel - 1) return;
 
-      // Sistema de puntuación exponencial
-      const basePoints = Math.pow(2, level + 3) * 5;
+      // Sistema de puntuación exponencial (favorece fusiones altas)
+      const basePoints = Math.pow(2, level + 3) * 5; // Más puntos para niveles altos
       const levelBonus = (level + 1) * 15;
       const points = basePoints + levelBonus;
       score += points;
@@ -1562,7 +1331,13 @@
       };
       board[row][col].element.classList.add('merged');
       
-      playSound(newLevel >= maxLevel - 1 ? 'victory' : 'merge');
+      // Actualizar nivel máximo alcanzado
+      if (newLevel + 1 > maxReachedLevel) {
+        maxReachedLevel = newLevel + 1;
+        playSound('levelup');
+      } else {
+        playSound('merge');
+      }
 
       // Colocar nueva ficha en posición vacía
       board[prevRow][prevCol] = { 
@@ -1570,26 +1345,30 @@
         element: createTileElement(nextTileLevel, prevRow, prevCol) 
       };
 
-      // Generar siguiente ficha
+      // Generar siguiente ficha con lógica inteligente
       nextTileLevel = generateNextTileLevel();
 
       updateNextTile();
       renderBoard();
       updateStats();
       
-      // Guardar récord sin popup molesto
+      // Verificar condición de nivel máximo (sin popup molesto)
       if (newLevel >= maxLevel - 1) {
         saveRecord();
+        playSound('victory');
       }
     }
 
-    // Actualizar estadísticas
+    // Actualizar estadísticas en pantalla
     function updateStats() {
       document.getElementById('score').textContent = score.toLocaleString();
-      updateTargetScore();
+      document.getElementById('moves').textContent = moves;
+      document.getElementById('maxReached').textContent = maxReachedLevel;
+      document.getElementById('maxLevelDisplay').textContent = maxLevel;
+      updateNextRecord();
     }
 
-    // Sistema de guardado de récords
+    // Sistema de guardado de récords (actualizado)
     function saveHighScore() {
       const modalityKey = getModalityKey();
       const currentHighKey = `gemafusion-highscore-${modalityKey}`;
@@ -1601,6 +1380,7 @@
         updateHighScoreDisplay();
       }
       
+      // Guardar en sistema de récords
       saveRecord();
     }
 
@@ -1624,37 +1404,39 @@
         playerNick = document.getElementById('playerNick').value.trim() || 'Jugador';
         currentTheme = document.getElementById('themeSelect').value;
         
+        // Precargar recursos
         await preloadImages();
         
         // Resetear estado del juego
         score = 0;
+        moves = 0;
+        maxReachedLevel = 1;
         selectedTile = null;
         gameStartTime = Date.now();
         bonusesLeft = 3;
         undosLeft = 3;
         gameHistory = [];
         
-        // Actualizar display del nivel máximo
-        document.getElementById('maxLevelDisplay').textContent = maxLevel;
-        
         // Cambiar a pantalla de juego
         document.getElementById('optionsScreen').style.display = 'none';
         document.getElementById('gameScreen').style.display = 'flex';
         
+        // Reproducir sonido de bienvenida
         setTimeout(() => playSound('welcome'), 500);
         
+        // Inicializar tablero
         initBoard();
         
-        console.log(`🎮 Nueva partida - ${boardSizeX}x${boardSizeY}, Max: ${maxLevel}, Tema: ${currentTheme}`);
+        console.log(`🎮 Nueva partida iniciada - ${boardSizeX}x${boardSizeY}, Nivel máximo: ${maxLevel}, Jugador: ${playerNick}, Tema: ${currentTheme}`);
       } catch (error) {
         console.error('Error al iniciar el juego:', error);
-        alert('❌ Error al inicializar el juego.');
+        alert('❌ Error al inicializar el juego. Por favor, verifica tu conexión a internet e inténtalo de nuevo.');
       }
     }
 
     // Reiniciar juego
     function restartGame() {
-      if (confirm('¿Reiniciar partida actual?')) {
+      if (confirm('¿Estás seguro de que quieres reiniciar la partida actual?')) {
         saveHighScore();
         startGame();
       }
@@ -1662,7 +1444,7 @@
 
     // Volver al menú principal
     function backToMenu() {
-      if (confirm('¿Volver al menú? Se perderá el progreso.')) {
+      if (confirm('¿Volver al menú principal? Se perderá el progreso actual.')) {
         saveHighScore();
         document.getElementById('gameScreen').style.display = 'none';
         document.getElementById('optionsScreen').style.display = 'flex';
@@ -1670,20 +1452,20 @@
       }
     }
 
-    // Inicialización
+    // Inicialización al cargar la página
     window.addEventListener('load', () => {
-      console.log('🎮 Gemafusion Enhanced cargado');
-      
-      // Inicializar board como array vacío para evitar errores
-      board = [];
-      
+      console.log('🎮 Gemafusion PWA Enhanced cargado correctamente');
       updateHighScoreDisplay();
+      
+      // Configurar tema inicial
       Object.assign(TILE_IMAGES, generateTileImages(currentTheme));
       
+      // Precargar imágenes en segundo plano
       preloadImages().catch(error => {
         console.warn('Advertencia: Algunas imágenes no se pudieron precargar:', error);
       });
 
+      // Event listeners para modales
       window.addEventListener('click', (e) => {
         if (e.target.classList.contains('modal')) {
           e.target.style.display = 'none';
@@ -1691,37 +1473,37 @@
       });
     });
 
-    // Prevenir zoom y scroll en móviles
+    // Prevenir zoom en dispositivos móviles
     document.addEventListener('touchstart', function(event) {
       if (event.touches.length > 1) {
         event.preventDefault();
       }
     }, { passive: false });
 
+    // Prevenir scroll bounce en iOS
     document.addEventListener('touchmove', function(event) {
       event.preventDefault();
     }, { passive: false });
 
-    // Manejar cambios de orientación - solo si el juego está activo
+    // Manejar cambios de orientación
     window.addEventListener('orientationchange', () => {
       setTimeout(() => {
-        if (document.getElementById('gameScreen').style.display !== 'none' && 
-            board && Array.isArray(board) && board.length > 0) {
+        if (document.getElementById('gameScreen').style.display !== 'none') {
           renderBoard();
           updateLevelPreview();
         }
       }, 100);
     });
 
-    // Optimización para resize - solo ejecutar si el juego está activo
+    // Optimización para rendimiento
     window.addEventListener('resize', debounce(() => {
-      if (document.getElementById('gameScreen').style.display !== 'none' && 
-          board && Array.isArray(board) && board.length > 0) {
+      if (document.getElementById('gameScreen').style.display !== 'none') {
         renderBoard();
         updateLevelPreview();
       }
     }, 250));
 
+    // Función debounce para optimizar resize
     function debounce(func, wait) {
       let timeout;
       return function executedFunction(...args) {
@@ -1734,15 +1516,13 @@
       };
     }
 
-    // Probabilidades del sistema (para referencia)
-    console.log('📊 Sistema de probabilidades:');
+    // Probabilidades utilizadas en el sistema de generación
+    console.log('📊 Sistema de probabilidades implementado:');
+    console.log('   • 1 nivel: 100%');
     console.log('   • 2 niveles: 70%, 30%');
     console.log('   • 3 niveles: 50%, 30%, 20%');
     console.log('   • 4 niveles: 40%, 30%, 20%, 10%');
-    console.log('   • 5+ niveles: 35%, 25%, 20%, 15%, 5% resto');
-    console.log('🧠 Reglas especiales:');
-    console.log('   • Anti-bloqueo: No genera nivel si solo quedan 2 fichas');
-    console.log('   • Última combinación: Genera nivel X+1 para último par');
+    console.log('   • 5+ niveles: 35%, 25%, 20%, 15%, 5% cada uno');
   </script>
 </body>
 </html>

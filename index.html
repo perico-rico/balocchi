@@ -80,7 +80,8 @@
       font-size: 12px;
     }
     .tile-text.hidden {
-      opacity: 0;
+      opacity: 0 !important;
+      visibility: hidden !important;
     }
     .next-tile {
       width: 100px;
@@ -937,27 +938,28 @@
     function toggleNumbers() {
       showNumbers = !showNumbers;
       
+      console.log('🔢 Toggle números:', showNumbers ? 'MOSTRAR' : 'OCULTAR');
+      
       // Aplicar a todas las fichas existentes del tablero
-      document.querySelectorAll('.tile-text').forEach(text => {
-        text.classList.toggle('hidden', !showNumbers);
+      const tileTexts = document.querySelectorAll('.tile-text');
+      console.log('📍 Fichas encontradas:', tileTexts.length);
+      
+      tileTexts.forEach((text, index) => {
+        if (showNumbers) {
+          text.classList.remove('hidden');
+        } else {
+          text.classList.add('hidden');
+        }
+        console.log(`Ficha ${index}:`, text.classList.contains('hidden') ? 'OCULTA' : 'VISIBLE');
       });
       
       // Aplicar a preview de niveles
       document.querySelectorAll('.preview-tile-large').forEach(tile => {
-        tile.textContent = showNumbers ? tile.textContent || (tile.dataset.level ? parseInt(tile.dataset.level) + 1 : '') : '';
+        tile.textContent = showNumbers ? (tile.dataset.level ? parseInt(tile.dataset.level) + 1 : '') : '';
       });
       
-      // Aplicar a siguiente ficha
-      const nextTileElement = document.querySelector('.next-tile');
-      if (nextTileElement) {
-        nextTileElement.style.color = showNumbers ? 'white' : 'transparent';
-      }
-      
-      // Actualizar preview y próxima ficha completamente
-      updateLevelPreview();
+      // Actualizar próxima ficha
       updateNextTile();
-      
-      console.log('🔢 Toggle números:', showNumbers ? 'MOSTRAR' : 'OCULTAR');
     }
 
     // Sistema de bonus - cambiar ficha

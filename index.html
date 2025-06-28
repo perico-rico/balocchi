@@ -927,6 +927,7 @@
         const tile = document.createElement('div');
         tile.className = 'preview-tile-large';
         tile.style.backgroundImage = `url('${getTileImage(i)}')`;
+        tile.dataset.level = i; // Guardar nivel para toggle
         tile.textContent = showNumbers ? (i + 1) : '';
         preview.appendChild(tile);
       }
@@ -935,12 +936,15 @@
     // Toggle mostrar/ocultar números
     function toggleNumbers() {
       showNumbers = !showNumbers;
-      const toggleText = document.getElementById('numbersToggleText');
-      toggleText.textContent = showNumbers ? '🔢 Ocultar Números' : '🔢 Mostrar Números';
       
-      // Aplicar a todas las fichas existentes
+      // Aplicar a todas las fichas existentes del tablero
       document.querySelectorAll('.tile-text').forEach(text => {
         text.classList.toggle('hidden', !showNumbers);
+      });
+      
+      // Aplicar a preview de niveles
+      document.querySelectorAll('.preview-tile-large').forEach(tile => {
+        tile.textContent = showNumbers ? tile.textContent || (tile.dataset.level ? parseInt(tile.dataset.level) + 1 : '') : '';
       });
       
       // Aplicar a siguiente ficha
@@ -948,6 +952,12 @@
       if (nextTileElement) {
         nextTileElement.style.color = showNumbers ? 'white' : 'transparent';
       }
+      
+      // Actualizar preview y próxima ficha completamente
+      updateLevelPreview();
+      updateNextTile();
+      
+      console.log('🔢 Toggle números:', showNumbers ? 'MOSTRAR' : 'OCULTAR');
     }
 
     // Sistema de bonus - cambiar ficha

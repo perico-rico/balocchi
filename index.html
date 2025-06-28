@@ -65,16 +65,19 @@
       z-index: 1;
     }
     .tile-text {
-      position: relative;
+      position: absolute;
+      bottom: 4px;
+      right: 4px;
       z-index: 2;
       font-weight: bold;
       text-shadow: 3px 3px 6px rgba(0,0,0,0.9);
       color: white;
-      background: rgba(0,0,0,0.4);
-      padding: 4px 8px;
-      border-radius: 8px;
+      background: rgba(0,0,0,0.6);
+      padding: 2px 6px;
+      border-radius: 4px;
       backdrop-filter: blur(4px);
       transition: opacity 0.3s ease;
+      font-size: 12px;
     }
     .tile-text.hidden {
       opacity: 0;
@@ -656,6 +659,80 @@
       return TILE_IMAGES[Math.min(level, 9)] || TILE_IMAGES[0];
     }
 
+    // Verificar reglas especiales de generación
+    function checkSpecialRules(presentLevels) {
+      if (presentLevels.length === 0) return null;
+      
+      // Contar frecuencia de cada nivel
+      const levelCounts = {};
+      for (let i = 0; i < boardSizeY; i++) {
+        for (let j = 0; j < boardSizeX; j++) {
+          if (board[i][j]) {
+            const level = board[i][j].level;
+            levelCounts[level] = (levelCounts[level] || 0) + 1;
+          }
+        }
+      }
+      
+      const minLevel = Math.min(...presentLevels);
+      const minLevelCount = levelCounts[minLevel] || 0;
+      const totalTiles = Object.values(levelCounts).reduce((sum, count) => sum + count, 0);
+      
+      // Regla 1: Solo quedan 2 fichas del nivel mínimo y el resto son superiores
+      if (minLevelCount === 2 && totalTiles > 2) {
+        const allOthersHigher = presentLevels.every(level => 
+          level === minLevel || level > minLevel
+        );
+        
+        if (allOthersHigher) {
+          console.log(`🎯 Regla 1 activada: Solo 2 fichas de nivel ${minLevel}, generando nivel ${minLevel + 1}`);
+          return { type: 'minLevel', level: minLevel + 1 };
+        }
+      }
+      
+      // Regla 2: Solo quedan 2 fichas adyacentes del mismo nivel y resto superiores
+      for (const level of presentLevels) {
+        if (levelCounts[level] === 2) {
+          const adjacentPair = findAdjacentPairOfLevel(level);
+          if (adjacentPair) {
+            const allOthersHigher = presentLevels.every(l => 
+              l === level || l > level
+            );
+            
+            if (allOthersHigher) {
+              console.log(`🎯 Regla 2 activada: Par adyacente de nivel ${level}, generando nivel ${level + 1}`);
+              return { type: 'adjacentPair', level: level + 1 };
+            }
+          }
+        }
+      }
+      
+      return null;
+    }
+    
+    // Buscar si existe un par adyacente de un nivel específico
+    function findAdjacentPairOfLevel(targetLevel) {
+      for (let i = 0; i < boardSizeY; i++) {
+        for (let j = 0; j < boardSizeX; j++) {
+          if (board[i][j] && board[i][j].level === targetLevel) {
+            // Verificar adyacentes
+            const adjacents = [
+              [i-1, j], [i+1, j], [i, j-1], [i, j+1]
+            ];
+            
+            for (const [newI, newJ] of adjacents) {
+              if (newI >= 0 && newI < boardSizeY && newJ >= 0 && newJ < boardSizeX) {
+                if (board[newI][newJ] && board[newI][newJ].level === targetLevel) {
+                  return { pos1: [i, j], pos2: [newI, newJ] };
+                }
+              }
+            }
+          }
+        }
+      }
+      return null;
+    }
+
     // Obtener niveles presentes en el tablero
     function getBoardLevels() {
       const levels = new Set();
@@ -669,13 +746,20 @@
       return Array.from(levels).sort((a, b) => a - b);
     }
 
-    // Generar próxima ficha con lógica inteligente
+    // Generar próxima ficha con lógica inteligente y reglas especiales
     function generateNextTileLevel() {
       const presentLevels = getBoardLevels();
       if (presentLevels.length === 0) {
         return 0; // Tablero vacío, empezar con nivel 0
       }
 
+      // Verificar reglas especiales primero
+      const specialRule = checkSpecialRules(presentLevels);
+      if (specialRule) {
+        return Math.min(specialRule.level, maxLevel - 1);
+      }
+
+      // Lógica normal
       const minLevel = Math.min(...presentLevels);
       const maxPresentLevel = Math.max(...presentLevels);
       const maxValidLevel = Math.max(0, maxPresentLevel - 2);

@@ -1097,6 +1097,11 @@
     // Actualizar preview de niveles
     function updateLevelPreview() {
       const preview = document.getElementById('levelPreview');
+      if (!preview) {
+        console.warn('⚠️ levelPreview element no encontrado');
+        return;
+      }
+      
       preview.innerHTML = '';
       
       for (let i = 0; i < maxLevel; i++) {
@@ -1375,6 +1380,9 @@
 
     // Inicializar tablero de juego
     function initBoard() {
+      console.log('🎲 Inicializando tablero...');
+      
+      // Inicializar array del tablero
       board = Array(boardSizeY).fill().map(() => Array(boardSizeX).fill(null));
       
       // Crear fichas iniciales con distribución balanceada
@@ -1389,8 +1397,12 @@
         }
       }
       
+      // Generar primera ficha siguiente
       nextTileLevel = generateNextTileLevel();
       
+      console.log(`✅ Tablero ${boardSizeX}x${boardSizeY} inicializado`);
+      
+      // Renderizar todo
       renderBoard();
       updateNextTile();
       updateLevelPreview();
@@ -1453,7 +1465,18 @@
 
     // Renderizar tablero completo con tamaño expandido
     function renderBoard() {
+      // Verificar que board existe antes de renderizar
+      if (!board || !Array.isArray(board) || board.length === 0) {
+        console.warn('⚠️ Board no inicializado, saltando renderBoard');
+        return;
+      }
+      
       const gameBoard = document.getElementById('gameBoard');
+      if (!gameBoard) {
+        console.warn('⚠️ gameBoard element no encontrado');
+        return;
+      }
+      
       gameBoard.innerHTML = '';
       
       // Calcular tamaño máximo aprovechando el espacio disponible
@@ -1477,7 +1500,7 @@
       
       for (let i = 0; i < boardSizeY; i++) {
         for (let j = 0; j < boardSizeX; j++) {
-          if (board[i][j] && board[i][j].element) {
+          if (board[i] && board[i][j] && board[i][j].element) {
             // Actualizar tamaño de las fichas existentes
             board[i][j].element.style.width = `${tileSize}px`;
             board[i][j].element.style.height = `${tileSize}px`;
@@ -1650,6 +1673,10 @@
     // Inicialización
     window.addEventListener('load', () => {
       console.log('🎮 Gemafusion Enhanced cargado');
+      
+      // Inicializar board como array vacío para evitar errores
+      board = [];
+      
       updateHighScoreDisplay();
       Object.assign(TILE_IMAGES, generateTileImages(currentTheme));
       
@@ -1675,19 +1702,21 @@
       event.preventDefault();
     }, { passive: false });
 
-    // Manejar cambios de orientación
+    // Manejar cambios de orientación - solo si el juego está activo
     window.addEventListener('orientationchange', () => {
       setTimeout(() => {
-        if (document.getElementById('gameScreen').style.display !== 'none') {
+        if (document.getElementById('gameScreen').style.display !== 'none' && 
+            board && Array.isArray(board) && board.length > 0) {
           renderBoard();
           updateLevelPreview();
         }
       }, 100);
     });
 
-    // Optimización para resize
+    // Optimización para resize - solo ejecutar si el juego está activo
     window.addEventListener('resize', debounce(() => {
-      if (document.getElementById('gameScreen').style.display !== 'none') {
+      if (document.getElementById('gameScreen').style.display !== 'none' && 
+          board && Array.isArray(board) && board.length > 0) {
         renderBoard();
         updateLevelPreview();
       }

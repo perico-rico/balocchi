@@ -16,10 +16,6 @@
   <style>
     body {
       background-color: #1a202c;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      min-height: 100vh;
       margin: 0;
       color: white;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -27,67 +23,130 @@
       box-sizing: border-box;
       overflow-x: hidden;
     }
-    .container {
-      width: 95vw;
-      max-width: 95vw;
+    
+    .game-container {
+      border: 2px solid rgba(79, 209, 197, 0.5);
+      border-radius: 15px;
+      padding: 20px;
+      max-width: 90vw;
+      max-height: 95vh;
+      margin: 0 auto;
+      background: linear-gradient(135deg, #2d3748, #1a202c);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      overflow-y: auto;
+    }
+    
+    .header-layout {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 20px;
+      gap: 20px;
+    }
+    
+    .score-section {
       display: flex;
       flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      box-sizing: border-box;
-      min-height: 100vh;
+      gap: 10px;
+      min-width: 150px;
     }
-    .tile {
-      display: flex;
-      justify-content: center;
-      align-items: center;
+    
+    .current-score {
+      background: linear-gradient(135deg, #2d3748, #1a202c);
+      padding: 15px;
       border-radius: 12px;
-      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      background-size: contain;
-      background-position: center;
-      background-repeat: no-repeat;
-      cursor: pointer;
-      position: relative;
-      overflow: hidden;
-      border: 2px solid rgba(79, 209, 197, 0.3);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      border: 1px solid rgba(79, 209, 197, 0.3);
+      text-align: center;
     }
-    .tile::before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background-size: contain;
-      background-position: center;
-      background-repeat: no-repeat;
-      z-index: 1;
+    
+    .score-label {
+      font-size: 12px;
+      color: #a0aec0;
+      margin-bottom: 5px;
     }
-    .tile-text {
-      position: relative;
-      z-index: 2;
+    
+    .score-value {
+      font-size: 24px;
       font-weight: bold;
-      text-shadow: 3px 3px 6px rgba(0,0,0,0.9);
+      color: #4fd1c5;
+    }
+    
+    .target-score {
+      background: linear-gradient(135deg, #e53e3e, #c53030);
+      padding: 12px;
+      border-radius: 10px;
+      text-align: center;
+      font-size: 12px;
+    }
+    
+    .target-position {
+      font-weight: bold;
+      margin-bottom: 3px;
+    }
+    
+    .target-points {
+      color: #fed7d7;
+    }
+    
+    .title-section {
+      text-align: center;
+      flex: 1;
+    }
+    
+    h1 {
+      background: linear-gradient(45deg, #4fd1c5, #38b2ac, #319795);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+      font-size: 2.5rem;
+      margin: 0;
+      text-shadow: 0 0 30px rgba(79, 209, 197, 0.3);
+    }
+    
+    .level-section {
+      min-width: 120px;
+      text-align: center;
+    }
+    
+    .max-level-display {
+      background: linear-gradient(135deg, #805ad5, #6b46c1);
+      padding: 20px;
+      border-radius: 15px;
+      border: 2px solid rgba(128, 90, 213, 0.5);
+    }
+    
+    .level-label {
+      font-size: 14px;
+      color: #e9d8fd;
+      margin-bottom: 8px;
+    }
+    
+    .level-value {
+      font-size: 3rem;
+      font-weight: bold;
       color: white;
-      background: rgba(0,0,0,0.4);
-      padding: 4px 8px;
-      border-radius: 8px;
-      backdrop-filter: blur(4px);
-      transition: opacity 0.3s ease;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
     }
-    .tile-text.hidden {
-      opacity: 0;
+    
+    .next-tile-section {
+      text-align: center;
+      margin: 20px 0;
     }
+    
+    .next-tile-label {
+      color: #a0aec0;
+      font-size: 15px;
+      margin-bottom: 8px;
+    }
+    
     .next-tile {
       width: 100px;
       height: 100px;
-      display: flex;
+      display: inline-flex;
       justify-content: center;
       align-items: center;
       border-radius: 12px;
       font-size: 24px;
-      margin-bottom: 15px;
       background-size: contain;
       background-position: center;
       background-repeat: no-repeat;
@@ -96,192 +155,46 @@
       text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
       box-shadow: 0 0 20px rgba(79, 209, 197, 0.4);
       animation: pulse 2s infinite;
+      position: relative;
     }
+    
+    .next-tile-number {
+      position: absolute;
+      bottom: 5px;
+      right: 5px;
+      background: rgba(0,0,0,0.7);
+      color: white;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 14px;
+      font-weight: bold;
+      transition: opacity 0.3s ease;
+    }
+    
+    .next-tile-number.hidden {
+      opacity: 0;
+    }
+    
     @keyframes pulse {
       0%, 100% { box-shadow: 0 0 20px rgba(79, 209, 197, 0.4); }
       50% { box-shadow: 0 0 30px rgba(79, 209, 197, 0.7); }
     }
-    .tile.selected {
-      transform: scale(1.1);
-      box-shadow: 0 0 25px rgba(0, 255, 0, 0.8);
-      z-index: 10;
-      border-color: #00ff00;
-    }
-    .tile.merged {
-      animation: merge 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-    }
-    @keyframes merge {
-      0% { transform: scale(1); }
-      30% { transform: scale(1.5) rotate(5deg); }
-      60% { transform: scale(1.2) rotate(-3deg); }
-      100% { transform: scale(1) rotate(0deg); }
-    }
-    #gameBoard {
-      display: grid;
-      gap: 15px;
-      background: linear-gradient(135deg, #2d3748, #1a202c);
-      padding: 25px;
-      border-radius: 20px;
-      margin: 15px 0;
-      justify-content: center;
-      width: fit-content;
-      justify-self: center;
-      align-self: center;
-      border: 2px solid rgba(79, 209, 197, 0.2);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-    }
-    #optionsScreen, #gameScreen {
-      text-align: center;
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-    }
-    #optionsScreen {
-      display: flex;
-    }
-    #gameScreen {
-      display: none;
-    }
-    #optionsScreen select, #optionsScreen input {
-      margin: 10px;
-      padding: 15px;
-      font-size: 16px;
-      width: 250px;
-      border-radius: 12px;
-      border: 2px solid #4fd1c5;
-      background: linear-gradient(135deg, #2d3748, #1a202c);
-      color: white;
-      transition: all 0.3s ease;
-    }
-    #optionsScreen select:focus, #optionsScreen input:focus {
-      outline: none;
-      box-shadow: 0 0 15px rgba(79, 209, 197, 0.5);
-      transform: scale(1.02);
-    }
-    #optionsScreen button {
-      padding: 15px 30px;
-      font-size: 18px;
-      background: linear-gradient(45deg, #4fd1c5, #38b2ac, #319795);
-      border: none;
-      border-radius: 12px;
-      cursor: pointer;
-      color: white;
-      font-weight: bold;
-      margin: 15px;
-      transition: all 0.3s ease;
-      box-shadow: 0 6px 20px rgba(79, 209, 197, 0.3);
-    }
-    #optionsScreen button:hover {
-      transform: translateY(-2px) scale(1.05);
-      box-shadow: 0 10px 25px rgba(79, 209, 197, 0.5);
-    }
-    .game-stats {
-      display: flex;
-      justify-content: space-around;
-      width: 100%;
-      max-width: 450px;
-      margin: 20px 0;
-      gap: 10px;
-    }
-    .stat-item {
-      text-align: center;
-      background: linear-gradient(135deg, #2d3748, #1a202c);
-      padding: 15px;
-      border-radius: 12px;
-      min-width: 90px;
-      border: 1px solid rgba(79, 209, 197, 0.3);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    }
-    .stat-label {
-      font-size: 13px;
-      color: #a0aec0;
-      margin-bottom: 5px;
-    }
-    .stat-value {
-      font-size: 20px;
-      font-weight: bold;
-      color: #4fd1c5;
-    }
-    .game-controls {
-      margin: 20px 0;
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 10px;
-    }
-    .control-btn {
-      padding: 12px 20px;
-      background: linear-gradient(135deg, #4a5568, #2d3748);
-      border: none;
-      border-radius: 10px;
-      color: white;
-      cursor: pointer;
-      font-size: 14px;
-      font-weight: 500;
-      transition: all 0.3s ease;
-      border: 1px solid rgba(79, 209, 197, 0.3);
-    }
-    .control-btn:hover {
-      background: linear-gradient(135deg, #2d3748, #1a202c);
-      transform: translateY(-1px);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    }
-    .control-btn:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-      transform: none;
-    }
-    .control-btn.bonus {
-      background: linear-gradient(135deg, #e53e3e, #c53030);
-    }
-    .control-btn.bonus:hover:not(:disabled) {
-      background: linear-gradient(135deg, #c53030, #9c2626);
-    }
-    .loading-indicator {
-      display: none;
-      margin: 15px 0;
-      color: #4fd1c5;
-      font-weight: 500;
-    }
-    .loading-spinner {
-      display: inline-block;
-      width: 20px;
-      height: 20px;
-      border: 2px solid rgba(79, 209, 197, 0.3);
-      border-top: 2px solid #4fd1c5;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-      margin-right: 10px;
-    }
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
-    h1 {
-      background: linear-gradient(45deg, #4fd1c5, #38b2ac, #319795);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      font-size: 2.8rem;
-      margin-bottom: 25px;
-      text-shadow: 0 0 30px rgba(79, 209, 197, 0.3);
-    }
-    .instructions {
-      background: linear-gradient(135deg, #2d3748, #1a202c);
-      padding: 20px;
-      border-radius: 15px;
-      margin: 25px 0;
-      border: 2px solid rgba(79, 209, 197, 0.2);
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-    }
+    
     .level-preview {
       display: flex;
       justify-content: center;
       gap: 5px;
-      margin: 10px 0;
+      margin: 15px 0;
       flex-wrap: wrap;
     }
+    
+    .preview-label {
+      color: #a0aec0;
+      font-size: 13px;
+      margin-bottom: 5px;
+      text-align: center;
+    }
+    
     .preview-tile {
       width: 30px;
       height: 30px;
@@ -297,7 +210,194 @@
       font-weight: bold;
       color: white;
       text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+      position: relative;
     }
+    
+    .preview-number {
+      position: absolute;
+      bottom: 1px;
+      right: 1px;
+      background: rgba(0,0,0,0.8);
+      color: white;
+      padding: 1px 3px;
+      border-radius: 2px;
+      font-size: 8px;
+      transition: opacity 0.3s ease;
+    }
+    
+    .preview-number.hidden {
+      opacity: 0;
+    }
+    
+    .tile {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border-radius: 12px;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      background-size: contain;
+      background-position: center;
+      background-repeat: no-repeat;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+      border: 2px solid rgba(79, 209, 197, 0.3);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+    
+    .tile-text {
+      position: absolute;
+      bottom: 5px;
+      right: 5px;
+      font-weight: bold;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.9);
+      color: white;
+      background: rgba(0,0,0,0.7);
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 14px;
+      transition: opacity 0.3s ease;
+    }
+    
+    .tile-text.hidden {
+      opacity: 0;
+    }
+    
+    .tile.selected {
+      transform: scale(1.1);
+      box-shadow: 0 0 25px rgba(0, 255, 0, 0.8);
+      z-index: 10;
+      border-color: #00ff00;
+    }
+    
+    .tile.merged {
+      animation: merge 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+    
+    @keyframes merge {
+      0% { transform: scale(1); }
+      30% { transform: scale(1.5) rotate(5deg); }
+      60% { transform: scale(1.2) rotate(-3deg); }
+      100% { transform: scale(1) rotate(0deg); }
+    }
+    
+    #gameBoard {
+      display: grid;
+      gap: 15px;
+      background: linear-gradient(135deg, #2d3748, #1a202c);
+      padding: 25px;
+      border-radius: 20px;
+      margin: 20px auto;
+      justify-content: center;
+      width: fit-content;
+      border: 2px solid rgba(79, 209, 197, 0.2);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+    
+    #optionsScreen, #gameScreen {
+      text-align: center;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    #optionsScreen {
+      display: flex;
+    }
+    
+    #gameScreen {
+      display: none;
+    }
+    
+    #optionsScreen select, #optionsScreen input {
+      margin: 10px;
+      padding: 15px;
+      font-size: 16px;
+      width: 250px;
+      border-radius: 12px;
+      border: 2px solid #4fd1c5;
+      background: linear-gradient(135deg, #2d3748, #1a202c);
+      color: white;
+      transition: all 0.3s ease;
+    }
+    
+    #optionsScreen select:focus, #optionsScreen input:focus {
+      outline: none;
+      box-shadow: 0 0 15px rgba(79, 209, 197, 0.5);
+      transform: scale(1.02);
+    }
+    
+    #optionsScreen button {
+      padding: 15px 30px;
+      font-size: 18px;
+      background: linear-gradient(45deg, #4fd1c5, #38b2ac, #319795);
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      color: white;
+      font-weight: bold;
+      margin: 15px;
+      transition: all 0.3s ease;
+      box-shadow: 0 6px 20px rgba(79, 209, 197, 0.3);
+    }
+    
+    #optionsScreen button:hover {
+      transform: translateY(-2px) scale(1.05);
+      box-shadow: 0 10px 25px rgba(79, 209, 197, 0.5);
+    }
+    
+    .game-controls {
+      margin: 20px 0;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+    }
+    
+    .control-btn {
+      padding: 12px 20px;
+      background: linear-gradient(135deg, #4a5568, #2d3748);
+      border: none;
+      border-radius: 10px;
+      color: white;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      border: 1px solid rgba(79, 209, 197, 0.3);
+    }
+    
+    .control-btn:hover {
+      background: linear-gradient(135deg, #2d3748, #1a202c);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+    
+    .control-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+    
+    .control-btn.bonus {
+      background: linear-gradient(135deg, #e53e3e, #c53030);
+    }
+    
+    .control-btn.bonus:hover:not(:disabled) {
+      background: linear-gradient(135deg, #c53030, #9c2626);
+    }
+    
+    .instructions {
+      background: linear-gradient(135deg, #2d3748, #1a202c);
+      padding: 20px;
+      border-radius: 15px;
+      margin: 25px 0;
+      border: 2px solid rgba(79, 209, 197, 0.2);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    }
+    
     .modal {
       position: fixed;
       top: 0;
@@ -310,6 +410,7 @@
       align-items: center;
       z-index: 1000;
     }
+    
     .modal-content {
       background: linear-gradient(135deg, #2d3748, #1a202c);
       padding: 30px;
@@ -318,12 +419,14 @@
       max-width: 400px;
       width: 90%;
     }
+    
     .theme-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
       gap: 15px;
       margin: 20px 0;
     }
+    
     .theme-option {
       padding: 15px;
       border: 2px solid rgba(79, 209, 197, 0.3);
@@ -332,33 +435,40 @@
       transition: all 0.3s ease;
       text-align: center;
     }
+    
     .theme-option:hover, .theme-option.selected {
       border-color: #4fd1c5;
       background: rgba(79, 209, 197, 0.1);
     }
+    
     .records-modal {
       max-width: 600px;
     }
+    
     .records-table {
       width: 100%;
       border-collapse: collapse;
       margin: 20px 0;
     }
+    
     .records-table th,
     .records-table td {
       padding: 10px;
       text-align: left;
       border-bottom: 1px solid rgba(79, 209, 197, 0.3);
     }
+    
     .records-table th {
       background: rgba(79, 209, 197, 0.2);
     }
+    
     .tile-chooser {
       display: grid;
       grid-template-columns: repeat(5, 1fr);
       gap: 10px;
       margin: 20px 0;
     }
+    
     .tile-choice {
       width: 50px;
       height: 50px;
@@ -375,16 +485,60 @@
       color: white;
       text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
       transition: all 0.3s ease;
+      position: relative;
     }
+    
     .tile-choice:hover {
       border-color: #4fd1c5;
       transform: scale(1.1);
     }
-    @media (max-width: 480px) {
-      h1 { font-size: 2.2rem; }
-      .game-stats { flex-direction: column; gap: 8px; }
-      .stat-item { min-width: auto; }
-      #optionsScreen select, #optionsScreen input { width: 200px; }
+    
+    .tile-choice-number {
+      position: absolute;
+      bottom: 2px;
+      right: 2px;
+      background: rgba(0,0,0,0.8);
+      color: white;
+      padding: 1px 3px;
+      border-radius: 2px;
+      font-size: 10px;
+    }
+    
+    .loading-indicator {
+      display: none;
+      margin: 15px 0;
+      color: #4fd1c5;
+      font-weight: 500;
+    }
+    
+    .loading-spinner {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      border: 2px solid rgba(79, 209, 197, 0.3);
+      border-top: 2px solid #4fd1c5;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-right: 10px;
+    }
+    
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+    
+    @media (max-width: 768px) {
+      .header-layout {
+        flex-direction: column;
+        gap: 15px;
+      }
+      
+      .score-section, .level-section {
+        min-width: auto;
+        width: 100%;
+      }
+      
+      h1 { font-size: 2rem; }
+      .level-value { font-size: 2rem; }
       .preview-tile { width: 25px; height: 25px; font-size: 8px; }
     }
   </style>
@@ -439,83 +593,63 @@
     </div>
 
     <div id="gameScreen">
-      <h1>💎 Gemafusion 💎</h1>
-      
-      <div class="game-stats">
-        <div class="stat-item">
-          <div class="stat-label">Puntuación</div>
-          <div class="stat-value" id="score">0</div>
+      <div class="game-container">
+        <div class="header-layout">
+          <div class="score-section">
+            <div class="current-score">
+              <div class="score-label">Puntuación Actual</div>
+              <div class="score-value" id="score">0</div>
+            </div>
+            <div class="target-score" id="targetScore">
+              <div class="target-position">5º Posición</div>
+              <div class="target-points">Meta: 0 puntos</div>
+            </div>
+          </div>
+          
+          <div class="title-section">
+            <h1>💎 Gemafusion 💎</h1>
+          </div>
+          
+          <div class="level-section">
+            <div class="max-level-display">
+              <div class="level-label">Nivel Máximo</div>
+              <div class="level-value" id="maxLevelDisplay">7</div>
+            </div>
+          </div>
         </div>
-        <div class="stat-item">
-          <div class="stat-label">Movimientos</div>
-          <div class="stat-value" id="moves">0</div>
+
+        <div class="next-tile-section">
+          <div class="next-tile-label">Próxima Ficha:</div>
+          <div id="nextTile"></div>
         </div>
-        <div class="stat-item">
-          <div class="stat-label">Nivel Max</div>
-          <div class="stat-value" id="maxReached">1</div>
+
+        <div style="margin: 15px 0;">
+          <div class="preview-label">Niveles Disponibles:</div>
+          <div id="levelPreview" class="level-preview"></div>
         </div>
-      </div>
 
-      <div style="margin: 20px 0;">
-        <div style="color: #a0aec0; font-size: 15px; margin-bottom: 8px;">Próxima Ficha:</div>
-        <div id="nextTile"></div>
-      </div>
+        <div id="gameBoard"></div>
 
-      <div style="margin: 10px 0;">
-        <div style="color: #a0aec0; font-size: 13px; margin-bottom: 5px;">Niveles Disponibles:</div>
-        <div id="levelPreview" class="level-preview"></div>
-      </div>
-
-      <div id="gameBoard"></div>
-
-      <div class="game-controls">
-        <button class="control-btn" onclick="toggleNumbers()">
-          <span id="numbersToggleText">🔢 Ocultar Números</span>
-        </button>
-        <button class="control-btn bonus" id="bonusBtn" onclick="showBonusModal()">
-          ⭐ Cambiar Ficha (<span id="bonusCount">3</span>)
-        </button>
-        <button class="control-btn bonus" id="undoBtn" onclick="undoMove()">
-          ↶ Deshacer (<span id="undoCount">3</span>)
-        </button>
-        <button class="control-btn" onclick="restartGame()">🔄 Nueva Partida</button>
-        <button class="control-btn" onclick="backToMenu()">🏠 Menú Principal</button>
-        <button class="control-btn" onclick="showRecords()">🏆 Récords</button>
-        <button class="control-btn" onclick="exitGame()">❌ Salir</button>
+        <div class="game-controls">
+          <button class="control-btn" onclick="toggleNumbers()">
+            <span id="numbersToggleText">🔢 Ocultar Números</span>
+          </button>
+          <button class="control-btn bonus" id="bonusBtn" onclick="showBonusModal()">
+            ⭐ Cambiar Ficha (<span id="bonusCount">3</span>)
+          </button>
+          <button class="control-btn bonus" id="undoBtn" onclick="undoMove()">
+            ↶ Deshacer (<span id="undoCount">3</span>)
+          </button>
+          <button class="control-btn" onclick="restartGame()">🔄 Nueva Partida</button>
+          <button class="control-btn" onclick="backToMenu()">🏠 Menú Principal</button>
+          <button class="control-btn" onclick="showRecords()">🏆 Récords</button>
+          <button class="control-btn" onclick="exitGame()">❌ Salir</button>
+        </div>
       </div>
     </div>
   </div>
 
   <!-- Modales -->
-  <div id="themeModal" class="modal" style="display: none;">
-    <div class="modal-content">
-      <h2>🎨 Seleccionar Tema</h2>
-      <div class="theme-grid">
-        <div class="theme-option" data-theme="diamonds">
-          <div>💎</div>
-          <div>Diamantes</div>
-        </div>
-        <div class="theme-option" data-theme="frutas">
-          <div>🍎</div>
-          <div>Frutas</div>
-        </div>
-        <div class="theme-option" data-theme="frutas2">
-          <div>🍓</div>
-          <div>Frutas 2</div>
-        </div>
-        <div class="theme-option" data-theme="flores">
-          <div>🌸</div>
-          <div>Flores</div>
-        </div>
-        <div class="theme-option" data-theme="vegetales">
-          <div>🥬</div>
-          <div>Vegetales</div>
-        </div>
-      </div>
-      <button class="control-btn" onclick="closeModal('themeModal')">Cerrar</button>
-    </div>
-  </div>
-
   <div id="bonusModal" class="modal" style="display: none;">
     <div class="modal-content">
       <h2>⭐ Cambiar Próxima Ficha</h2>
@@ -565,11 +699,9 @@
     let boardSizeY = 5;
     let board = [];
     let score = 0;
-    let moves = 0;
     let selectedTile = null;
     let nextTileLevel = 0;
     let maxLevel = 7;
-    let maxReachedLevel = 1;
     let playerNick = 'Jugador';
     let gameStartTime = 0;
     let showNumbers = true;
@@ -577,6 +709,7 @@
     let bonusesLeft = 3;
     let undosLeft = 3;
     let gameHistory = [];
+    let currentTargetRecord = null;
 
     // Sistema de temas
     const THEMES = {
@@ -669,25 +802,102 @@
       return Array.from(levels).sort((a, b) => a - b);
     }
 
-    // Generar próxima ficha con lógica inteligente
+    // Contar fichas por nivel
+    function countTilesByLevel() {
+      const counts = {};
+      for (let i = 0; i < boardSizeY; i++) {
+        for (let j = 0; j < boardSizeX; j++) {
+          if (board[i][j]) {
+            const level = board[i][j].level;
+            counts[level] = (counts[level] || 0) + 1;
+          }
+        }
+      }
+      return counts;
+    }
+
+    // Encontrar pares adyacentes del mismo nivel
+    function findAdjacentPairs() {
+      const pairs = [];
+      for (let i = 0; i < boardSizeY; i++) {
+        for (let j = 0; j < boardSizeX; j++) {
+          if (board[i][j]) {
+            const level = board[i][j].level;
+            // Comprobar adyacentes
+            const adjacent = [
+              [i-1, j], [i+1, j], [i, j-1], [i, j+1]
+            ];
+            
+            for (let [ai, aj] of adjacent) {
+              if (ai >= 0 && ai < boardSizeY && aj >= 0 && aj < boardSizeX && 
+                  board[ai][aj] && board[ai][aj].level === level) {
+                const pairKey = `${Math.min(i,ai)},${Math.min(j,aj)}-${Math.max(i,ai)},${Math.max(j,aj)}`;
+                if (!pairs.find(p => p.key === pairKey)) {
+                  pairs.push({
+                    key: pairKey,
+                    level: level,
+                    positions: [[i,j], [ai,aj]]
+                  });
+                }
+              }
+            }
+          }
+        }
+      }
+      return pairs;
+    }
+
+    // Generar próxima ficha con lógica inteligente mejorada
     function generateNextTileLevel() {
       const presentLevels = getBoardLevels();
+      const levelCounts = countTilesByLevel();
+      const adjacentPairs = findAdjacentPairs();
+      
       if (presentLevels.length === 0) {
-        return 0; // Tablero vacío, empezar con nivel 0
+        return 0; // Tablero vacío
       }
 
       const minLevel = Math.min(...presentLevels);
       const maxPresentLevel = Math.max(...presentLevels);
-      const maxValidLevel = Math.max(0, maxPresentLevel - 2);
+      const totalTiles = boardSizeX * boardSizeY;
       
-      // Crear array de niveles válidos (que existen en tablero)
+      // Regla 1: Anti-bloqueo - Si solo quedan 2 fichas de un nivel bajo y todas las demás son superiores
+      for (let level of presentLevels) {
+        if (levelCounts[level] === 2) {
+          const otherTilesCount = totalTiles - 2;
+          const higherLevelTiles = Object.entries(levelCounts)
+            .filter(([l, count]) => parseInt(l) > level)
+            .reduce((sum, [l, count]) => sum + count, 0);
+          
+          if (higherLevelTiles === otherTilesCount) {
+            // Solo quedan 2 fichas de este nivel, no generarlo más
+            const validLevels = presentLevels.filter(l => l > level);
+            if (validLevels.length > 0) {
+              return Math.min(...validLevels);
+            }
+          }
+        }
+      }
+      
+      // Regla 2: Última combinación - Si solo hay un par adyacente de un nivel, la nueva será X+1
+      const singlePairs = adjacentPairs.filter(pair => {
+        return levelCounts[pair.level] === 2;
+      });
+      
+      if (singlePairs.length === 1) {
+        const targetLevel = Math.min(singlePairs[0].level + 1, maxLevel - 1);
+        return targetLevel;
+      }
+
+      // Lógica normal con límites dinámicos
+      const maxValidLevel = Math.max(0, maxPresentLevel - 2);
       const validLevels = presentLevels.filter(level => level <= maxValidLevel);
       
       if (validLevels.length === 0) {
-        return minLevel; // Fallback
+        return minLevel;
       }
 
-      // Sistema de probabilidades ponderadas (favorece niveles bajos)
+      // Sistema de probabilidades ponderadas
       const weights = [];
       if (validLevels.length === 1) {
         weights.push(100);
@@ -715,7 +925,51 @@
         }
       }
       
-      return validLevels[0]; // Fallback
+      return validLevels[0];
+    }
+
+    // Actualizar display del récord objetivo
+    function updateTargetScore() {
+      const modalityKey = getModalityKey();
+      const records = getRecords(modalityKey);
+      
+      if (records.length === 0) {
+        currentTargetRecord = null;
+        document.getElementById('targetScore').innerHTML = `
+          <div class="target-position">Sin récords</div>
+          <div class="target-points">¡Sé el primero!</div>
+        `;
+        return;
+      }
+      
+      // Encontrar el récord más bajo que sea superior a la puntuación actual
+      let targetRecord = null;
+      for (let i = records.length - 1; i >= 0; i--) {
+        if (records[i].score > score) {
+          targetRecord = { ...records[i], position: i + 1 };
+          break;
+        }
+      }
+      
+      if (!targetRecord) {
+        // Ya superaste todos los récords
+        document.getElementById('targetScore').innerHTML = `
+          <div class="target-position">¡Nuevo Récord!</div>
+          <div class="target-points">¡Increíble!</div>
+        `;
+      } else {
+        const position = targetRecord.position === 1 ? '1º' : 
+                        targetRecord.position === 2 ? '2º' : 
+                        targetRecord.position === 3 ? '3º' : 
+                        `${targetRecord.position}º`;
+        
+        document.getElementById('targetScore').innerHTML = `
+          <div class="target-position">${position} Posición</div>
+          <div class="target-points">Meta: ${targetRecord.score.toLocaleString()}</div>
+        `;
+      }
+      
+      currentTargetRecord = targetRecord;
     }
 
     // Actualizar preview de niveles
@@ -727,7 +981,13 @@
         const tile = document.createElement('div');
         tile.className = 'preview-tile';
         tile.style.backgroundImage = `url('${getTileImage(i)}')`;
-        tile.textContent = i + 1;
+        
+        const number = document.createElement('div');
+        number.className = 'preview-number';
+        if (!showNumbers) number.classList.add('hidden');
+        number.textContent = i + 1;
+        
+        tile.appendChild(number);
         preview.appendChild(tile);
       }
     }
@@ -744,10 +1004,14 @@
       });
       
       // Aplicar a siguiente ficha
-      const nextTileElement = document.querySelector('.next-tile');
-      if (nextTileElement) {
-        nextTileElement.style.color = showNumbers ? 'white' : 'transparent';
-      }
+      document.querySelectorAll('.next-tile-number').forEach(number => {
+        number.classList.toggle('hidden', !showNumbers);
+      });
+      
+      // Aplicar a preview
+      document.querySelectorAll('.preview-number').forEach(number => {
+        number.classList.toggle('hidden', !showNumbers);
+      });
     }
 
     // Sistema de bonus - cambiar ficha
@@ -767,8 +1031,13 @@
         const tile = document.createElement('div');
         tile.className = 'tile-choice';
         tile.style.backgroundImage = `url('${getTileImage(i)}')`;
-        tile.textContent = showNumbers ? (i + 1) : '';
         tile.onclick = () => useBonusChangeTitle(i);
+        
+        const number = document.createElement('div');
+        number.className = 'tile-choice-number';
+        number.textContent = i + 1;
+        tile.appendChild(number);
+        
         chooser.appendChild(tile);
       }
       
@@ -791,9 +1060,7 @@
           row.map(cell => cell ? { level: cell.level } : null)
         ))),
         score,
-        moves,
-        nextTileLevel,
-        maxReachedLevel
+        nextTileLevel
       };
       
       gameHistory.push(state);
@@ -810,9 +1077,7 @@
       
       // Restaurar estado
       score = previousState.score;
-      moves = previousState.moves;
       nextTileLevel = previousState.nextTileLevel;
-      maxReachedLevel = previousState.maxReachedLevel;
       
       // Limpiar tablero actual
       const gameBoard = document.getElementById('gameBoard');
@@ -855,7 +1120,8 @@
       const recordKey = `records_${modalityKey}`;
       
       // Contar fichas de nivel máximo
-      const maxLevelTiles = getBoardLevels().filter(level => level === maxLevel - 1).length;
+      const levelCounts = countTilesByLevel();
+      const maxLevelTiles = levelCounts[maxLevel - 1] || 0;
       
       const newRecord = {
         player: playerNick,
@@ -926,14 +1192,13 @@
       }
     }
 
-    // Precargar imágenes con mejor manejo de errores
+    // Precargar imágenes
     function preloadImages() {
       return new Promise((resolve, reject) => {
         const loadingIndicator = document.getElementById('loadingIndicator');
         loadingIndicator.style.display = 'flex';
         loadingIndicator.style.alignItems = 'center';
         
-        // Generar URLs para tema actual
         Object.assign(TILE_IMAGES, generateTileImages(currentTheme));
         
         const imagePromises = Object.values(TILE_IMAGES).map(url => {
@@ -942,7 +1207,7 @@
             img.onload = () => resolveImg(url);
             img.onerror = () => {
               console.warn(`⚠️ No se pudo cargar: ${url}`);
-              resolveImg(url); // Resolver en lugar de rechazar para continuar
+              resolveImg(url);
             };
             img.src = url;
           });
@@ -957,7 +1222,7 @@
           .catch(error => {
             loadingIndicator.style.display = 'none';
             console.error('❌ Error cargando recursos:', error);
-            resolve(); // Continuar aunque algunas imágenes fallen
+            resolve();
           });
       });
     }
@@ -978,7 +1243,6 @@
         }
       }
       
-      // Generar primera ficha siguiente
       nextTileLevel = generateNextTileLevel();
       
       renderBoard();
@@ -996,33 +1260,29 @@
       tile.dataset.col = col;
       tile.dataset.level = level;
       
-      // Crear texto del nivel
-      const tileText = document.createElement('div');
-      tileText.className = 'tile-text';
-      if (!showNumbers) {
-        tileText.classList.add('hidden');
-      }
-      tileText.textContent = level + 1;
-      tile.appendChild(tileText);
-      
       // Aplicar imagen de fondo
       const imageUrl = getTileImage(level);
       tile.style.backgroundImage = `url('${imageUrl}')`;
       
+      // Crear texto del nivel (abajo derecha)
+      const tileText = document.createElement('div');
+      tileText.className = 'tile-text';
+      if (!showNumbers) tileText.classList.add('hidden');
+      tileText.textContent = level + 1;
+      tile.appendChild(tileText);
+      
       // Calcular tamaño responsivo optimizado
       const viewportWidth = window.innerWidth;
       const viewportHeight = window.innerHeight;
-      const availableWidth = Math.min(viewportWidth * 0.9, viewportHeight * 0.6);
+      const availableWidth = Math.min(viewportWidth * 0.7, viewportHeight * 0.4);
       
       const baseTileSize = Math.floor((availableWidth - 80) / boardSizeX) - 15;
-      const enlargedTileSize = Math.floor(baseTileSize * 1.2);
-      const finalTileSize = Math.max(70, Math.min(enlargedTileSize, 140));
+      const finalTileSize = Math.max(60, Math.min(baseTileSize, 120));
       
       tile.style.width = `${finalTileSize}px`;
       tile.style.height = `${finalTileSize}px`;
-      tileText.style.fontSize = `${Math.max(18, finalTileSize * 0.22)}px`;
       
-      // Eventos mejorados para móvil y escritorio
+      // Eventos para móvil y escritorio
       tile.addEventListener('touchstart', (e) => {
         e.preventDefault();
         handleTileClick(row, col);
@@ -1043,9 +1303,14 @@
       
       const tile = document.createElement('div');
       tile.className = 'next-tile';
-      tile.textContent = showNumbers ? (nextTileLevel + 1) : '';
       tile.style.backgroundImage = `url('${getTileImage(nextTileLevel)}')`;
       
+      const number = document.createElement('div');
+      number.className = 'next-tile-number';
+      if (!showNumbers) number.classList.add('hidden');
+      number.textContent = nextTileLevel + 1;
+      
+      tile.appendChild(number);
       nextTileContainer.appendChild(tile);
     }
 
@@ -1057,11 +1322,10 @@
       // Configurar grid con tamaños dinámicos
       const viewportWidth = window.innerWidth;
       const viewportHeight = window.innerHeight;
-      const availableWidth = Math.min(viewportWidth * 0.9, viewportHeight * 0.6);
+      const availableWidth = Math.min(viewportWidth * 0.7, viewportHeight * 0.4);
       
       const baseTileSize = Math.floor((availableWidth - 80) / boardSizeX) - 15;
-      const enlargedTileSize = Math.floor(baseTileSize * 1.2);
-      const finalTileSize = Math.max(70, Math.min(enlargedTileSize, 140));
+      const finalTileSize = Math.max(60, Math.min(baseTileSize, 120));
       
       gameBoard.style.gridTemplateColumns = `repeat(${boardSizeX}, ${finalTileSize}px)`;
       gameBoard.style.gridTemplateRows = `repeat(${boardSizeY}, ${finalTileSize}px)`;
@@ -1080,7 +1344,6 @@
       if (!board[row][col]) return;
 
       if (!selectedTile) {
-        // Seleccionar ficha
         selectedTile = { row, col };
         board[row][col].element.classList.add('selected');
       } else {
@@ -1088,18 +1351,14 @@
         board[prevRow][prevCol].element.classList.remove('selected');
 
         if (row === prevRow && col === prevCol) {
-          // Deseleccionar la misma ficha
           selectedTile = null;
           return;
         }
 
         if (isAdjacent(row, col, prevRow, prevCol) && 
             board[row][col].level === board[prevRow][prevCol].level) {
-          // Guardar estado antes del movimiento
           saveGameState();
-          // Fusionar fichas
           mergeTiles(row, col, prevRow, prevCol);
-          moves++;
         }
         
         selectedTile = null;
@@ -1112,14 +1371,14 @@
              (Math.abs(col1 - col2) === 1 && row1 === row2);
     }
 
-    // Sistema de fusión mejorado con puntuación exponencial
+    // Sistema de fusión mejorado
     function mergeTiles(row, col, prevRow, prevCol) {
       const level = board[row][col].level;
       
       if (level >= maxLevel - 1) return;
 
-      // Sistema de puntuación exponencial (favorece fusiones altas)
-      const basePoints = Math.pow(2, level + 3) * 5; // Más puntos para niveles altos
+      // Sistema de puntuación exponencial
+      const basePoints = Math.pow(2, level + 3) * 5;
       const levelBonus = (level + 1) * 15;
       const points = basePoints + levelBonus;
       score += points;
@@ -1132,13 +1391,7 @@
       };
       board[row][col].element.classList.add('merged');
       
-      // Actualizar nivel máximo alcanzado
-      if (newLevel + 1 > maxReachedLevel) {
-        maxReachedLevel = newLevel + 1;
-        playSound('levelup');
-      } else {
-        playSound('merge');
-      }
+      playSound(newLevel >= maxLevel - 1 ? 'victory' : 'merge');
 
       // Colocar nueva ficha en posición vacía
       board[prevRow][prevCol] = { 
@@ -1146,28 +1399,26 @@
         element: createTileElement(nextTileLevel, prevRow, prevCol) 
       };
 
-      // Generar siguiente ficha con lógica inteligente
+      // Generar siguiente ficha
       nextTileLevel = generateNextTileLevel();
 
       updateNextTile();
       renderBoard();
       updateStats();
       
-      // Verificar condición de nivel máximo (sin popup molesto)
+      // Guardar récord sin popup molesto
       if (newLevel >= maxLevel - 1) {
         saveRecord();
-        playSound('victory');
       }
     }
 
-    // Actualizar estadísticas en pantalla
+    // Actualizar estadísticas
     function updateStats() {
       document.getElementById('score').textContent = score.toLocaleString();
-      document.getElementById('moves').textContent = moves;
-      document.getElementById('maxReached').textContent = maxReachedLevel;
+      updateTargetScore();
     }
 
-    // Sistema de guardado de récords (actualizado)
+    // Sistema de guardado de récords
     function saveHighScore() {
       const modalityKey = getModalityKey();
       const currentHighKey = `gemafusion-highscore-${modalityKey}`;
@@ -1179,7 +1430,6 @@
         updateHighScoreDisplay();
       }
       
-      // Guardar en sistema de récords
       saveRecord();
     }
 
@@ -1203,39 +1453,37 @@
         playerNick = document.getElementById('playerNick').value.trim() || 'Jugador';
         currentTheme = document.getElementById('themeSelect').value;
         
-        // Precargar recursos
         await preloadImages();
         
         // Resetear estado del juego
         score = 0;
-        moves = 0;
-        maxReachedLevel = 1;
         selectedTile = null;
         gameStartTime = Date.now();
         bonusesLeft = 3;
         undosLeft = 3;
         gameHistory = [];
         
+        // Actualizar display del nivel máximo
+        document.getElementById('maxLevelDisplay').textContent = maxLevel;
+        
         // Cambiar a pantalla de juego
         document.getElementById('optionsScreen').style.display = 'none';
         document.getElementById('gameScreen').style.display = 'flex';
         
-        // Reproducir sonido de bienvenida
         setTimeout(() => playSound('welcome'), 500);
         
-        // Inicializar tablero
         initBoard();
         
-        console.log(`🎮 Nueva partida iniciada - ${boardSizeX}x${boardSizeY}, Nivel máximo: ${maxLevel}, Jugador: ${playerNick}, Tema: ${currentTheme}`);
+        console.log(`🎮 Nueva partida - ${boardSizeX}x${boardSizeY}, Max: ${maxLevel}, Tema: ${currentTheme}`);
       } catch (error) {
         console.error('Error al iniciar el juego:', error);
-        alert('❌ Error al inicializar el juego. Por favor, verifica tu conexión a internet e inténtalo de nuevo.');
+        alert('❌ Error al inicializar el juego.');
       }
     }
 
     // Reiniciar juego
     function restartGame() {
-      if (confirm('¿Estás seguro de que quieres reiniciar la partida actual?')) {
+      if (confirm('¿Reiniciar partida actual?')) {
         saveHighScore();
         startGame();
       }
@@ -1243,7 +1491,7 @@
 
     // Volver al menú principal
     function backToMenu() {
-      if (confirm('¿Volver al menú principal? Se perderá el progreso actual.')) {
+      if (confirm('¿Volver al menú? Se perderá el progreso.')) {
         saveHighScore();
         document.getElementById('gameScreen').style.display = 'none';
         document.getElementById('optionsScreen').style.display = 'flex';
@@ -1251,20 +1499,16 @@
       }
     }
 
-    // Inicialización al cargar la página
+    // Inicialización
     window.addEventListener('load', () => {
-      console.log('🎮 Gemafusion PWA Enhanced cargado correctamente');
+      console.log('🎮 Gemafusion Enhanced cargado');
       updateHighScoreDisplay();
-      
-      // Configurar tema inicial
       Object.assign(TILE_IMAGES, generateTileImages(currentTheme));
       
-      // Precargar imágenes en segundo plano
       preloadImages().catch(error => {
         console.warn('Advertencia: Algunas imágenes no se pudieron precargar:', error);
       });
 
-      // Event listeners para modales
       window.addEventListener('click', (e) => {
         if (e.target.classList.contains('modal')) {
           e.target.style.display = 'none';
@@ -1272,14 +1516,13 @@
       });
     });
 
-    // Prevenir zoom en dispositivos móviles
+    // Prevenir zoom y scroll en móviles
     document.addEventListener('touchstart', function(event) {
       if (event.touches.length > 1) {
         event.preventDefault();
       }
     }, { passive: false });
 
-    // Prevenir scroll bounce en iOS
     document.addEventListener('touchmove', function(event) {
       event.preventDefault();
     }, { passive: false });
@@ -1294,7 +1537,7 @@
       }, 100);
     });
 
-    // Optimización para rendimiento
+    // Optimización para resize
     window.addEventListener('resize', debounce(() => {
       if (document.getElementById('gameScreen').style.display !== 'none') {
         renderBoard();
@@ -1302,7 +1545,6 @@
       }
     }, 250));
 
-    // Función debounce para optimizar resize
     function debounce(func, wait) {
       let timeout;
       return function executedFunction(...args) {
@@ -1315,13 +1557,15 @@
       };
     }
 
-    // Probabilidades utilizadas en el sistema de generación
-    console.log('📊 Sistema de probabilidades implementado:');
-    console.log('   • 1 nivel: 100%');
+    // Probabilidades del sistema (para referencia)
+    console.log('📊 Sistema de probabilidades:');
     console.log('   • 2 niveles: 70%, 30%');
     console.log('   • 3 niveles: 50%, 30%, 20%');
     console.log('   • 4 niveles: 40%, 30%, 20%, 10%');
-    console.log('   • 5+ niveles: 35%, 25%, 20%, 15%, 5% cada uno');
+    console.log('   • 5+ niveles: 35%, 25%, 20%, 15%, 5% resto');
+    console.log('🧠 Reglas especiales:');
+    console.log('   • Anti-bloqueo: No genera nivel si solo quedan 2 fichas');
+    console.log('   • Última combinación: Genera nivel X+1 para último par');
   </script>
 </body>
 </html>

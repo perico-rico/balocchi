@@ -16,6 +16,10 @@
   <style>
     body {
       background-color: #1a202c;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
       margin: 0;
       color: white;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -24,10 +28,14 @@
       overflow-x: hidden;
     }
     .container {
-      width: 100vw;
-      max-width: 100vw;
-      min-height: 100vh;
+      width: 95vw;
+      max-width: 95vw;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
       box-sizing: border-box;
+      min-height: 100vh;
     }
     .tile {
       display: flex;
@@ -72,13 +80,14 @@
       opacity: 0;
     }
     .next-tile {
-      width: 80px;
-      height: 80px;
+      width: 100px;
+      height: 100px;
       display: flex;
       justify-content: center;
       align-items: center;
       border-radius: 12px;
-      font-size: 18px;
+      font-size: 24px;
+      margin-bottom: 15px;
       background-size: contain;
       background-position: center;
       background-repeat: no-repeat;
@@ -109,28 +118,31 @@
     }
     #gameBoard {
       display: grid;
-      gap: 8px;
+      gap: 15px;
       background: linear-gradient(135deg, #2d3748, #1a202c);
-      padding: 15px;
+      padding: 25px;
       border-radius: 20px;
+      margin: 15px 0;
+      justify-content: center;
+      width: fit-content;
+      justify-self: center;
+      align-self: center;
       border: 2px solid rgba(79, 209, 197, 0.2);
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     }
     #optionsScreen, #gameScreen {
+      text-align: center;
       width: 100%;
-    }
-    #optionsScreen {
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      text-align: center;
-      min-height: 100vh;
+    }
+    #optionsScreen {
+      display: flex;
     }
     #gameScreen {
       display: none;
-      height: 100vh;
-      overflow: hidden;
     }
     #optionsScreen select, #optionsScreen input {
       margin: 10px;
@@ -165,133 +177,55 @@
       transform: translateY(-2px) scale(1.05);
       box-shadow: 0 10px 25px rgba(79, 209, 197, 0.5);
     }
-    .game-layout {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      grid-template-rows: auto auto 1fr;
-      height: 100vh;
-      gap: 10px;
-      padding: 10px;
-    }
-    .info-bar {
-      grid-column: 1 / -1;
+    .game-stats {
       display: flex;
-      justify-content: space-between;
+      justify-content: space-around;
+      width: 100%;
+      max-width: 450px;
+      margin: 20px 0;
       gap: 10px;
-      margin-bottom: 10px;
     }
-    .info-card {
+    .stat-item {
+      text-align: center;
       background: linear-gradient(135deg, #2d3748, #1a202c);
-      padding: 10px;
-      border-radius: 10px;
+      padding: 15px;
+      border-radius: 12px;
+      min-width: 90px;
       border: 1px solid rgba(79, 209, 197, 0.3);
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-      flex: 1;
-      text-align: center;
     }
-    .info-label {
-      font-size: 12px;
+    .stat-label {
+      font-size: 13px;
       color: #a0aec0;
       margin-bottom: 5px;
     }
-    .info-value {
-      font-size: 18px;
+    .stat-value {
+      font-size: 20px;
       font-weight: bold;
       color: #4fd1c5;
     }
-    .game-area {
+    .game-controls {
+      margin: 20px 0;
       display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-    .controls-area {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      align-items: center;
-      width: 80px;
-    }
-    .control-section {
-      display: flex;
-      gap: 10px;
-      align-items: center;
-    }
-    .next-section {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 5px;
-    }
-    .level-display {
-      width: 120px;
-      height: 120px;
-      background: linear-gradient(135deg, #2d3748, #1a202c);
-      border: 3px solid #4fd1c5;
-      border-radius: 15px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 0 20px rgba(79, 209, 197, 0.4);
-    }
-    .level-number {
-      font-size: 48px;
-      font-weight: bold;
-      color: #4fd1c5;
-      text-shadow: 0 0 10px #4fd1c5;
-    }
-    .level-text {
-      font-size: 12px;
-      color: #a0aec0;
-      margin-top: 5px;
-    }
-    .level-preview {
-      display: flex;
-      justify-content: center;
-      gap: 8px;
-      margin: 10px 0;
       flex-wrap: wrap;
-    }
-    .preview-tile {
-      width: 60px;
-      height: 60px;
-      border-radius: 8px;
-      background-size: contain;
-      background-position: center;
-      background-repeat: no-repeat;
-      border: 2px solid rgba(79, 209, 197, 0.3);
-      display: flex;
-      align-items: center;
       justify-content: center;
-      font-size: 14px;
-      font-weight: bold;
-      color: white;
-      text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
-      transition: all 0.3s ease;
-    }
-    .preview-tile:hover {
-      transform: scale(1.1);
-      border-color: #4fd1c5;
+      gap: 10px;
     }
     .control-btn {
-      width: 50px;
-      height: 50px;
-      border-radius: 50%;
+      padding: 12px 20px;
       background: linear-gradient(135deg, #4a5568, #2d3748);
       border: none;
+      border-radius: 10px;
       color: white;
       cursor: pointer;
-      font-size: 20px;
+      font-size: 14px;
+      font-weight: 500;
       transition: all 0.3s ease;
-      border: 2px solid rgba(79, 209, 197, 0.3);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin: 5px 0;
+      border: 1px solid rgba(79, 209, 197, 0.3);
     }
     .control-btn:hover {
       background: linear-gradient(135deg, #2d3748, #1a202c);
-      transform: scale(1.1);
+      transform: translateY(-1px);
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     }
     .control-btn:disabled {
@@ -340,6 +274,29 @@
       margin: 25px 0;
       border: 2px solid rgba(79, 209, 197, 0.2);
       box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    }
+    .level-preview {
+      display: flex;
+      justify-content: center;
+      gap: 5px;
+      margin: 10px 0;
+      flex-wrap: wrap;
+    }
+    .preview-tile {
+      width: 30px;
+      height: 30px;
+      border-radius: 6px;
+      background-size: contain;
+      background-position: center;
+      background-repeat: no-repeat;
+      border: 1px solid rgba(79, 209, 197, 0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 10px;
+      font-weight: bold;
+      color: white;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
     }
     .modal {
       position: fixed;
@@ -423,34 +380,12 @@
       border-color: #4fd1c5;
       transform: scale(1.1);
     }
-    .bonus-count {
-      position: absolute;
-      top: -5px;
-      right: -5px;
-      background: #e53e3e;
-      color: white;
-      border-radius: 50%;
-      width: 20px;
-      height: 20px;
-      font-size: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: bold;
-    }
-    @media (max-width: 768px) {
-      .game-layout {
-        grid-template-columns: 1fr;
-        grid-template-rows: auto auto auto 1fr;
-      }
-      .controls-area {
-        flex-direction: row;
-        width: 100%;
-        justify-content: center;
-      }
-      .preview-tile { width: 40px; height: 40px; font-size: 12px; }
-      .level-display { width: 80px; height: 80px; }
-      .level-number { font-size: 32px; }
+    @media (max-width: 480px) {
+      h1 { font-size: 2.2rem; }
+      .game-stats { flex-direction: column; gap: 8px; }
+      .stat-item { min-width: auto; }
+      #optionsScreen select, #optionsScreen input { width: 200px; }
+      .preview-tile { width: 25px; height: 25px; font-size: 8px; }
     }
   </style>
 </head>
@@ -504,85 +439,83 @@
     </div>
 
     <div id="gameScreen">
-      <div class="game-layout">
-        <div class="info-bar">
-          <div class="info-card">
-            <div class="info-label">Puntuación Actual</div>
-            <div class="info-value" id="score">0</div>
-          </div>
-          <div class="info-card">
-            <div class="info-label">Siguiente Récord</div>
-            <div class="info-value" id="nextRecord">--</div>
-          </div>
+      <h1>💎 Gemafusion 💎</h1>
+      
+      <div class="game-stats">
+        <div class="stat-item">
+          <div class="stat-label">Puntuación</div>
+          <div class="stat-value" id="score">0</div>
         </div>
-        
-        <div class="game-area">
-          <div class="control-section">
-            <div class="next-section">
-              <div style="color: #a0aec0; font-size: 12px;">Próxima:</div>
-              <div id="nextTile"></div>
-            </div>
-            
-            <div class="info-card" style="width: 80px; height: 80px; display: flex; flex-direction: column; justify-content: center;">
-              <div class="info-label">Puntuación</div>
-              <div class="info-value" style="font-size: 14px;" id="scoreSmall">0</div>
-            </div>
-            
-            <div class="info-card" style="width: 80px; height: 80px; display: flex; flex-direction: column; justify-content: center;">
-              <div class="info-label">Récord</div>
-              <div class="info-value" style="font-size: 14px;" id="recordSmall">--</div>
-            </div>
-            
-            <div class="level-display">
-              <div class="level-number" id="levelNumber">7</div>
-              <div class="level-text">Nivel Máx</div>
-            </div>
-          </div>
-
-          <div style="margin: 10px 0;">
-            <div style="color: #a0aec0; font-size: 13px; margin-bottom: 5px; text-align: center;">Niveles Disponibles:</div>
-            <div id="levelPreview" class="level-preview"></div>
-          </div>
-
-          <div style="display: flex; gap: 10px; align-items: flex-start;">
-            <div id="gameBoard"></div>
-            
-            <div class="controls-area">
-              <button class="control-btn" onclick="toggleNumbers()" title="Mostrar/Ocultar Números">
-                🔢
-              </button>
-              <div style="position: relative;">
-                <button class="control-btn bonus" id="bonusBtn" onclick="showBonusModal()" title="Cambiar Ficha">
-                  ⭐
-                </button>
-                <div class="bonus-count" id="bonusCount">3</div>
-              </div>
-              <div style="position: relative;">
-                <button class="control-btn bonus" id="undoBtn" onclick="undoMove()" title="Deshacer">
-                  ↶
-                </button>
-                <div class="bonus-count" id="undoCount">3</div>
-              </div>
-              <button class="control-btn" onclick="restartGame()" title="Nueva Partida">
-                🔄
-              </button>
-              <button class="control-btn" onclick="backToMenu()" title="Menú Principal">
-                🏠
-              </button>
-              <button class="control-btn" onclick="showRecords()" title="Récords">
-                🏆
-              </button>
-              <button class="control-btn" onclick="exitGame()" title="Salir">
-                ❌
-              </button>
-            </div>
-          </div>
+        <div class="stat-item">
+          <div class="stat-label">Movimientos</div>
+          <div class="stat-value" id="moves">0</div>
         </div>
+        <div class="stat-item">
+          <div class="stat-label">Nivel Max</div>
+          <div class="stat-value" id="maxReached">1</div>
+        </div>
+      </div>
+
+      <div style="margin: 20px 0;">
+        <div style="color: #a0aec0; font-size: 15px; margin-bottom: 8px;">Próxima Ficha:</div>
+        <div id="nextTile"></div>
+      </div>
+
+      <div style="margin: 10px 0;">
+        <div style="color: #a0aec0; font-size: 13px; margin-bottom: 5px;">Niveles Disponibles:</div>
+        <div id="levelPreview" class="level-preview"></div>
+      </div>
+
+      <div id="gameBoard"></div>
+
+      <div class="game-controls">
+        <button class="control-btn" onclick="toggleNumbers()">
+          <span id="numbersToggleText">🔢 Ocultar Números</span>
+        </button>
+        <button class="control-btn bonus" id="bonusBtn" onclick="showBonusModal()">
+          ⭐ Cambiar Ficha (<span id="bonusCount">3</span>)
+        </button>
+        <button class="control-btn bonus" id="undoBtn" onclick="undoMove()">
+          ↶ Deshacer (<span id="undoCount">3</span>)
+        </button>
+        <button class="control-btn" onclick="restartGame()">🔄 Nueva Partida</button>
+        <button class="control-btn" onclick="backToMenu()">🏠 Menú Principal</button>
+        <button class="control-btn" onclick="showRecords()">🏆 Récords</button>
+        <button class="control-btn" onclick="exitGame()">❌ Salir</button>
       </div>
     </div>
   </div>
 
   <!-- Modales -->
+  <div id="themeModal" class="modal" style="display: none;">
+    <div class="modal-content">
+      <h2>🎨 Seleccionar Tema</h2>
+      <div class="theme-grid">
+        <div class="theme-option" data-theme="diamonds">
+          <div>💎</div>
+          <div>Diamantes</div>
+        </div>
+        <div class="theme-option" data-theme="frutas">
+          <div>🍎</div>
+          <div>Frutas</div>
+        </div>
+        <div class="theme-option" data-theme="frutas2">
+          <div>🍓</div>
+          <div>Frutas 2</div>
+        </div>
+        <div class="theme-option" data-theme="flores">
+          <div>🌸</div>
+          <div>Flores</div>
+        </div>
+        <div class="theme-option" data-theme="vegetales">
+          <div>🥬</div>
+          <div>Vegetales</div>
+        </div>
+      </div>
+      <button class="control-btn" onclick="closeModal('themeModal')">Cerrar</button>
+    </div>
+  </div>
+
   <div id="bonusModal" class="modal" style="display: none;">
     <div class="modal-content">
       <h2>⭐ Cambiar Próxima Ficha</h2>
@@ -632,9 +565,11 @@
     let boardSizeY = 5;
     let board = [];
     let score = 0;
+    let moves = 0;
     let selectedTile = null;
     let nextTileLevel = 0;
     let maxLevel = 7;
+    let maxReachedLevel = 1;
     let playerNick = 'Jugador';
     let gameStartTime = 0;
     let showNumbers = true;
@@ -734,112 +669,19 @@
       return Array.from(levels).sort((a, b) => a - b);
     }
 
-    // Contar fichas por nivel
-    function getLevelCounts() {
-      const counts = {};
-      for (let i = 0; i < boardSizeY; i++) {
-        for (let j = 0; j < boardSizeX; j++) {
-          if (board[i][j]) {
-            const level = board[i][j].level;
-            counts[level] = (counts[level] || 0) + 1;
-          }
-        }
-      }
-      return counts;
-    }
-
-    // Verificar si hay solo 2 fichas adyacentes del mismo nivel
-    function getOnlyTwoAdjacentPairs() {
-      const levelCounts = getLevelCounts();
-      const presentLevels = Object.keys(levelCounts).map(Number);
-      
-      for (const level of presentLevels) {
-        if (levelCounts[level] === 2) {
-          // Verificar si son adyacentes
-          const positions = [];
-          for (let i = 0; i < boardSizeY; i++) {
-            for (let j = 0; j < boardSizeX; j++) {
-              if (board[i][j] && board[i][j].level === level) {
-                positions.push({row: i, col: j});
-              }
-            }
-          }
-          
-          if (positions.length === 2) {
-            const [pos1, pos2] = positions;
-            if (isAdjacent(pos1.row, pos1.col, pos2.row, pos2.col)) {
-              // Verificar si todas las demás fichas son de nivel superior
-              const otherLevels = presentLevels.filter(l => l !== level);
-              const allHigher = otherLevels.every(l => l > level);
-              
-              if (allHigher) {
-                return level; // Este nivel necesita fusión de rescate
-              }
-            }
-          }
-        }
-      }
-      return null;
-    }
-
-    // Verificar regla de liberación por mayoría
-    function checkMajorityRule() {
-      const levelCounts = getLevelCounts();
-      const presentLevels = Object.keys(levelCounts).map(Number).sort((a, b) => a - b);
-      
-      if (presentLevels.length === 0) return null;
-      
-      const minLevel = presentLevels[0];
-      const minCount = levelCounts[minLevel];
-      
-      // Si solo hay 2 fichas del nivel mínimo
-      if (minCount === 2) {
-        // Verificar si todas las demás son de nivel superior
-        const otherLevels = presentLevels.filter(l => l !== minLevel);
-        const allHigher = otherLevels.every(l => l > minLevel);
-        
-        if (allHigher) {
-          return minLevel; // Ya no ofrecer este nivel mínimo
-        }
-      }
-      
-      return null;
-    }
-
-    // Generar próxima ficha con lógica inteligente y reglas avanzadas
+    // Generar próxima ficha con lógica inteligente
     function generateNextTileLevel() {
       const presentLevels = getBoardLevels();
       if (presentLevels.length === 0) {
         return 0; // Tablero vacío, empezar con nivel 0
       }
 
-      // Verificar regla de fusión de rescate
-      const rescueLevel = getOnlyTwoAdjacentPairs();
-      if (rescueLevel !== null) {
-        return rescueLevel + 1; // Ofrecer nivel superior para continuar jugando
-      }
-
-      // Verificar regla de liberación por mayoría
-      const blockedLevel = checkMajorityRule();
-      
       const minLevel = Math.min(...presentLevels);
       const maxPresentLevel = Math.max(...presentLevels);
       const maxValidLevel = Math.max(0, maxPresentLevel - 2);
       
-      // Crear array de niveles válidos
-      let validLevels;
-      
-      if (blockedLevel !== null) {
-        // Aplicar regla de liberación: no ofrecer nivel bloqueado, ofrecer superiores
-        validLevels = presentLevels.filter(level => level > blockedLevel && level <= maxValidLevel);
-        // Si no hay válidos superiores, ofrecer uno por encima del mínimo
-        if (validLevels.length === 0) {
-          validLevels = [minLevel + 1].filter(level => level <= maxValidLevel);
-        }
-      } else {
-        // Lógica normal: solo niveles que existen en tablero
-        validLevels = presentLevels.filter(level => level <= maxValidLevel);
-      }
+      // Crear array de niveles válidos (que existen en tablero)
+      const validLevels = presentLevels.filter(level => level <= maxValidLevel);
       
       if (validLevels.length === 0) {
         return minLevel; // Fallback
@@ -885,32 +727,16 @@
         const tile = document.createElement('div');
         tile.className = 'preview-tile';
         tile.style.backgroundImage = `url('${getTileImage(i)}')`;
-        tile.textContent = showNumbers ? (i + 1) : '';
+        tile.textContent = i + 1;
         preview.appendChild(tile);
       }
-    }
-
-    // Actualizar display de nivel máximo
-    function updateLevelDisplay() {
-      document.getElementById('levelNumber').textContent = maxLevel;
-    }
-
-    // Actualizar información de récords
-    function updateRecordInfo() {
-      const modalityKey = getModalityKey();
-      const records = getRecords(modalityKey);
-      
-      // Encontrar el siguiente récord por encima de la puntuación actual
-      const nextRecord = records.find(record => record.score > score);
-      const nextRecordText = nextRecord ? nextRecord.score.toLocaleString() : '¡Nuevo récord!';
-      
-      document.getElementById('nextRecord').textContent = nextRecordText;
-      document.getElementById('recordSmall').textContent = nextRecordText;
     }
 
     // Toggle mostrar/ocultar números
     function toggleNumbers() {
       showNumbers = !showNumbers;
+      const toggleText = document.getElementById('numbersToggleText');
+      toggleText.textContent = showNumbers ? '🔢 Ocultar Números' : '🔢 Mostrar Números';
       
       // Aplicar a todas las fichas existentes
       document.querySelectorAll('.tile-text').forEach(text => {
@@ -922,9 +748,6 @@
       if (nextTileElement) {
         nextTileElement.style.color = showNumbers ? 'white' : 'transparent';
       }
-      
-      // Actualizar preview
-      updateLevelPreview();
     }
 
     // Sistema de bonus - cambiar ficha
@@ -968,7 +791,9 @@
           row.map(cell => cell ? { level: cell.level } : null)
         ))),
         score,
-        nextTileLevel
+        moves,
+        nextTileLevel,
+        maxReachedLevel
       };
       
       gameHistory.push(state);
@@ -985,7 +810,9 @@
       
       // Restaurar estado
       score = previousState.score;
+      moves = previousState.moves;
       nextTileLevel = previousState.nextTileLevel;
+      maxReachedLevel = previousState.maxReachedLevel;
       
       // Limpiar tablero actual
       const gameBoard = document.getElementById('gameBoard');
@@ -1099,7 +926,7 @@
       }
     }
 
-    // Precargar imágenes
+    // Precargar imágenes con mejor manejo de errores
     function preloadImages() {
       return new Promise((resolve, reject) => {
         const loadingIndicator = document.getElementById('loadingIndicator');
@@ -1115,7 +942,7 @@
             img.onload = () => resolveImg(url);
             img.onerror = () => {
               console.warn(`⚠️ No se pudo cargar: ${url}`);
-              resolveImg(url);
+              resolveImg(url); // Resolver en lugar de rechazar para continuar
             };
             img.src = url;
           });
@@ -1130,23 +957,9 @@
           .catch(error => {
             loadingIndicator.style.display = 'none';
             console.error('❌ Error cargando recursos:', error);
-            resolve();
+            resolve(); // Continuar aunque algunas imágenes fallen
           });
       });
-    }
-
-    // Calcular tamaño óptimo del tablero
-    function calculateOptimalBoardSize() {
-      const gameArea = document.querySelector('.game-area');
-      const availableWidth = window.innerWidth - 200; // Reservar espacio para controles
-      const availableHeight = window.innerHeight - 300; // Reservar espacio para UI superior
-      
-      const maxTileSize = Math.min(
-        Math.floor((availableWidth - 100) / boardSizeX) - 8,
-        Math.floor((availableHeight - 100) / boardSizeY) - 8
-      );
-      
-      return Math.max(50, Math.min(maxTileSize, 120));
     }
 
     // Inicializar tablero de juego
@@ -1171,12 +984,11 @@
       renderBoard();
       updateNextTile();
       updateLevelPreview();
-      updateLevelDisplay();
       updateStats();
       updateBonusButtons();
     }
 
-    // Crear elemento de ficha
+    // Crear elemento de ficha mejorado
     function createTileElement(level, row, col) {
       const tile = document.createElement('div');
       tile.className = `tile level-${level}`;
@@ -1197,13 +1009,20 @@
       const imageUrl = getTileImage(level);
       tile.style.backgroundImage = `url('${imageUrl}')`;
       
-      // Calcular tamaño óptimo
-      const tileSize = calculateOptimalBoardSize();
-      tile.style.width = `${tileSize}px`;
-      tile.style.height = `${tileSize}px`;
-      tileText.style.fontSize = `${Math.max(12, tileSize * 0.2)}px`;
+      // Calcular tamaño responsivo optimizado
+      const viewportWidth = window.innerWidth;
+      const viewportHeight = window.innerHeight;
+      const availableWidth = Math.min(viewportWidth * 0.9, viewportHeight * 0.6);
       
-      // Eventos
+      const baseTileSize = Math.floor((availableWidth - 80) / boardSizeX) - 15;
+      const enlargedTileSize = Math.floor(baseTileSize * 1.2);
+      const finalTileSize = Math.max(70, Math.min(enlargedTileSize, 140));
+      
+      tile.style.width = `${finalTileSize}px`;
+      tile.style.height = `${finalTileSize}px`;
+      tileText.style.fontSize = `${Math.max(18, finalTileSize * 0.22)}px`;
+      
+      // Eventos mejorados para móvil y escritorio
       tile.addEventListener('touchstart', (e) => {
         e.preventDefault();
         handleTileClick(row, col);
@@ -1235,9 +1054,17 @@
       const gameBoard = document.getElementById('gameBoard');
       gameBoard.innerHTML = '';
       
-      const tileSize = calculateOptimalBoardSize();
-      gameBoard.style.gridTemplateColumns = `repeat(${boardSizeX}, ${tileSize}px)`;
-      gameBoard.style.gridTemplateRows = `repeat(${boardSizeY}, ${tileSize}px)`;
+      // Configurar grid con tamaños dinámicos
+      const viewportWidth = window.innerWidth;
+      const viewportHeight = window.innerHeight;
+      const availableWidth = Math.min(viewportWidth * 0.9, viewportHeight * 0.6);
+      
+      const baseTileSize = Math.floor((availableWidth - 80) / boardSizeX) - 15;
+      const enlargedTileSize = Math.floor(baseTileSize * 1.2);
+      const finalTileSize = Math.max(70, Math.min(enlargedTileSize, 140));
+      
+      gameBoard.style.gridTemplateColumns = `repeat(${boardSizeX}, ${finalTileSize}px)`;
+      gameBoard.style.gridTemplateRows = `repeat(${boardSizeY}, ${finalTileSize}px)`;
       
       for (let i = 0; i < boardSizeY; i++) {
         for (let j = 0; j < boardSizeX; j++) {
@@ -1272,6 +1099,7 @@
           saveGameState();
           // Fusionar fichas
           mergeTiles(row, col, prevRow, prevCol);
+          moves++;
         }
         
         selectedTile = null;
@@ -1284,14 +1112,14 @@
              (Math.abs(col1 - col2) === 1 && row1 === row2);
     }
 
-    // Sistema de fusión con reglas especiales
+    // Sistema de fusión mejorado con puntuación exponencial
     function mergeTiles(row, col, prevRow, prevCol) {
       const level = board[row][col].level;
       
       if (level >= maxLevel - 1) return;
 
-      // Sistema de puntuación exponencial
-      const basePoints = Math.pow(2, level + 3) * 5;
+      // Sistema de puntuación exponencial (favorece fusiones altas)
+      const basePoints = Math.pow(2, level + 3) * 5; // Más puntos para niveles altos
       const levelBonus = (level + 1) * 15;
       const points = basePoints + levelBonus;
       score += points;
@@ -1304,28 +1132,21 @@
       };
       board[row][col].element.classList.add('merged');
       
-      playSound('merge');
-
-      // Determinar nivel de nueva ficha según reglas especiales
-      let newTileLevel;
-      const rescueLevel = getOnlyTwoAdjacentPairs();
-      
-      if (rescueLevel === level) {
-        // Regla 2: Fusión de rescate - nueva ficha será del nivel fusionado + 1
-        newTileLevel = level + 1;
-        console.log(`Fusión de rescate activada: nivel ${level} → nueva ficha nivel ${newTileLevel}`);
+      // Actualizar nivel máximo alcanzado
+      if (newLevel + 1 > maxReachedLevel) {
+        maxReachedLevel = newLevel + 1;
+        playSound('levelup');
       } else {
-        // Generación normal
-        newTileLevel = generateNextTileLevel();
+        playSound('merge');
       }
 
       // Colocar nueva ficha en posición vacía
       board[prevRow][prevCol] = { 
-        level: newTileLevel, 
-        element: createTileElement(newTileLevel, prevRow, prevCol) 
+        level: nextTileLevel, 
+        element: createTileElement(nextTileLevel, prevRow, prevCol) 
       };
 
-      // Generar siguiente ficha
+      // Generar siguiente ficha con lógica inteligente
       nextTileLevel = generateNextTileLevel();
 
       updateNextTile();
@@ -1342,11 +1163,11 @@
     // Actualizar estadísticas en pantalla
     function updateStats() {
       document.getElementById('score').textContent = score.toLocaleString();
-      document.getElementById('scoreSmall').textContent = score.toLocaleString();
-      updateRecordInfo();
+      document.getElementById('moves').textContent = moves;
+      document.getElementById('maxReached').textContent = maxReachedLevel;
     }
 
-    // Sistema de guardado de récords
+    // Sistema de guardado de récords (actualizado)
     function saveHighScore() {
       const modalityKey = getModalityKey();
       const currentHighKey = `gemafusion-highscore-${modalityKey}`;
@@ -1358,6 +1179,7 @@
         updateHighScoreDisplay();
       }
       
+      // Guardar en sistema de récords
       saveRecord();
     }
 
@@ -1386,6 +1208,8 @@
         
         // Resetear estado del juego
         score = 0;
+        moves = 0;
+        maxReachedLevel = 1;
         selectedTile = null;
         gameStartTime = Date.now();
         bonusesLeft = 3;
@@ -1394,7 +1218,7 @@
         
         // Cambiar a pantalla de juego
         document.getElementById('optionsScreen').style.display = 'none';
-        document.getElementById('gameScreen').style.display = 'block';
+        document.getElementById('gameScreen').style.display = 'flex';
         
         // Reproducir sonido de bienvenida
         setTimeout(() => playSound('welcome'), 500);
@@ -1429,7 +1253,7 @@
 
     // Inicialización al cargar la página
     window.addEventListener('load', () => {
-      console.log('🎮 Gemafusion Enhanced cargado correctamente');
+      console.log('🎮 Gemafusion PWA Enhanced cargado correctamente');
       updateHighScoreDisplay();
       
       // Configurar tema inicial
@@ -1455,7 +1279,12 @@
       }
     }, { passive: false });
 
-    // Manejar cambios de orientación y resize
+    // Prevenir scroll bounce en iOS
+    document.addEventListener('touchmove', function(event) {
+      event.preventDefault();
+    }, { passive: false });
+
+    // Manejar cambios de orientación
     window.addEventListener('orientationchange', () => {
       setTimeout(() => {
         if (document.getElementById('gameScreen').style.display !== 'none') {
@@ -1465,6 +1294,7 @@
       }, 100);
     });
 
+    // Optimización para rendimiento
     window.addEventListener('resize', debounce(() => {
       if (document.getElementById('gameScreen').style.display !== 'none') {
         renderBoard();
@@ -1472,7 +1302,7 @@
       }
     }, 250));
 
-    // Función debounce
+    // Función debounce para optimizar resize
     function debounce(func, wait) {
       let timeout;
       return function executedFunction(...args) {
@@ -1485,12 +1315,13 @@
       };
     }
 
-    // Información del sistema de probabilidades
-    console.log('📊 Sistemas implementados:');
-    console.log('   • Generación inteligente con probabilidades ponderadas');
-    console.log('   • Regla de liberación por mayoría');
-    console.log('   • Regla de fusión de rescate');
-    console.log('   • UI optimizada para diferentes tamaños de tablero');
+    // Probabilidades utilizadas en el sistema de generación
+    console.log('📊 Sistema de probabilidades implementado:');
+    console.log('   • 1 nivel: 100%');
+    console.log('   • 2 niveles: 70%, 30%');
+    console.log('   • 3 niveles: 50%, 30%, 20%');
+    console.log('   • 4 niveles: 40%, 30%, 20%, 10%');
+    console.log('   • 5+ niveles: 35%, 25%, 20%, 15%, 5% cada uno');
   </script>
 </body>
 </html>

@@ -19,36 +19,111 @@
       margin: 0;
       color: white;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      padding: 10px;
+      padding: 5px;
       box-sizing: border-box;
       overflow-x: hidden;
-    }
-    
-    .game-container {
-      border: 2px solid rgba(79, 209, 197, 0.5);
-      border-radius: 15px;
-      padding: 20px;
-      max-width: 90vw;
-      max-height: 100vh;
-      margin: 0 auto;
-      background: linear-gradient(135deg, #2d3748, #1a202c);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-      overflow-y: auto;
+      min-height: 100vh;
     }
     
     .header-layout {
       display: flex;
       align-items: center;
-      justify-content: space-between;
-      margin-bottom: 20px;
+      justify-content: flex-end;
+      margin-bottom: 15px;
       gap: 20px;
+      height: 120px;
+    }
+    
+    .left-space {
+      flex: 1;
+      min-width: 200px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #666;
+      font-style: italic;
+    }
+    
+    .next-tile-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: 120px;
+    }
+    
+    .next-tile-label {
+      color: #a0aec0;
+      font-size: 12px;
+      margin-bottom: 5px;
     }
     
     .score-section {
       display: flex;
       flex-direction: column;
+      gap: 8px;
+      min-width: 140px;
+    }
+    
+    .level-section {
+      min-width: 120px;
+      text-align: center;
+    }
+    
+    .main-layout {
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
+      min-height: calc(100vh - 200px);
+    }
+    
+    .game-area {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .controls-column {
+      display: flex;
+      flex-direction: column;
       gap: 10px;
-      min-width: 150px;
+      padding: 20px 0;
+      min-width: 60px;
+    }
+    
+    .control-btn-circle {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #4a5568, #2d3748);
+      border: 2px solid rgba(79, 209, 197, 0.3);
+      color: white;
+      cursor: pointer;
+      font-size: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.3s ease;
+    }
+    
+    .control-btn-circle:hover {
+      background: linear-gradient(135deg, #2d3748, #1a202c);
+      transform: scale(1.1);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    }
+    
+    .control-btn-circle:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+    
+    .control-btn-circle.bonus {
+      background: linear-gradient(135deg, #e53e3e, #c53030);
+    }
+    
+    .control-btn-circle.bonus:hover:not(:disabled) {
+      background: linear-gradient(135deg, #c53030, #9c2626);
     }
     
     .current-score {
@@ -283,15 +358,13 @@
     
     #gameBoard {
       display: grid;
-      gap: 15px;
+      gap: 12px;
       background: linear-gradient(135deg, #2d3748, #1a202c);
-      padding: 25px;
-      border-radius: 20px;
-      margin: 20px auto;
-      justify-content: center;
-      width: fit-content;
+      padding: 20px;
+      border-radius: 15px;
+      margin: 15px 0;
       border: 2px solid rgba(79, 209, 197, 0.2);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
     }
     
     #optionsScreen, #gameScreen {
@@ -593,57 +666,67 @@
     </div>
 
     <div id="gameScreen">
-      <div class="game-container">
-        <div class="header-layout">
-          <div class="score-section">
-            <div class="current-score">
-              <div class="score-label">Puntuación Actual</div>
-              <div class="score-value" id="score">0</div>
-            </div>
-            <div class="target-score" id="targetScore">
-              <div class="target-position">5º Posición</div>
-              <div class="target-points">Meta: 0 puntos</div>
-            </div>
-          </div>
-          
-          <div class="title-section">
-            <h1>💎 Gemafusion 💎</h1>
-          </div>
-          
-          <div class="level-section">
-            <div class="max-level-display">
-              <div class="level-label">Nivel Máximo</div>
-              <div class="level-value" id="maxLevelDisplay">7</div>
-            </div>
-          </div>
+      <div class="header-layout">
+        <div class="left-space">
+          <!-- Espacio reservado para futuro logo -->
         </div>
-
+        
         <div class="next-tile-section">
           <div class="next-tile-label">Próxima Ficha:</div>
           <div id="nextTile"></div>
         </div>
-
-        <div style="margin: 15px 0;">
-          <div class="preview-label">Niveles Disponibles:</div>
-          <div id="levelPreview" class="level-preview"></div>
+        
+        <div class="score-section">
+          <div class="current-score">
+            <div class="score-label">Puntuación Actual</div>
+            <div class="score-value" id="score">0</div>
+          </div>
+          <div class="target-score" id="targetScore">
+            <div class="target-position">5º Posición</div>
+            <div class="target-points">Meta: 0 puntos</div>
+          </div>
         </div>
+        
+        <div class="level-section">
+          <div class="max-level-display">
+            <div class="level-label">Nivel Máximo</div>
+            <div class="level-value" id="maxLevelDisplay">7</div>
+          </div>
+        </div>
+      </div>
 
-        <div id="gameBoard"></div>
+      <div style="margin: 15px 0;">
+        <div class="preview-label">Niveles Disponibles:</div>
+        <div id="levelPreview" class="level-preview"></div>
+      </div>
 
-        <div class="game-controls">
-          <button class="control-btn" onclick="toggleNumbers()">
-            <span id="numbersToggleText">🔢 Ocultar Números</span>
+      <div class="main-layout">
+        <div class="game-area">
+          <div id="gameBoard"></div>
+        </div>
+        
+        <div class="controls-column">
+          <button class="control-btn-circle" onclick="toggleNumbers()" title="Mostrar/Ocultar números">
+            🔢
           </button>
-          <button class="control-btn bonus" id="bonusBtn" onclick="showBonusModal()">
-            ⭐ Cambiar Ficha (<span id="bonusCount">3</span>)
+          <button class="control-btn-circle bonus" id="bonusBtn" onclick="showBonusModal()" title="Cambiar ficha">
+            ⭐
           </button>
-          <button class="control-btn bonus" id="undoBtn" onclick="undoMove()">
-            ↶ Deshacer (<span id="undoCount">3</span>)
+          <button class="control-btn-circle bonus" id="undoBtn" onclick="undoMove()" title="Deshacer">
+            ↶
           </button>
-          <button class="control-btn" onclick="restartGame()">🔄 Nueva Partida</button>
-          <button class="control-btn" onclick="backToMenu()">🏠 Menú Principal</button>
-          <button class="control-btn" onclick="showRecords()">🏆 Récords</button>
-          <button class="control-btn" onclick="exitGame()">❌ Salir</button>
+          <button class="control-btn-circle" onclick="restartGame()" title="Nueva partida">
+            🔄
+          </button>
+          <button class="control-btn-circle" onclick="backToMenu()" title="Menú principal">
+            🏠
+          </button>
+          <button class="control-btn-circle" onclick="showRecords()" title="Ver récords">
+            🏆
+          </button>
+          <button class="control-btn-circle" onclick="exitGame()" title="Salir">
+            ❌
+          </button>
         </div>
       </div>
     </div>
@@ -1252,7 +1335,7 @@
       updateBonusButtons();
     }
 
-    // Crear elemento de ficha mejorado
+    // Crear elemento de ficha con tamaño dinámico
     function createTileElement(level, row, col) {
       const tile = document.createElement('div');
       tile.className = `tile level-${level}`;
@@ -1271,16 +1354,7 @@
       tileText.textContent = level + 1;
       tile.appendChild(tileText);
       
-      // Calcular tamaño responsivo optimizado
-      const viewportWidth = window.innerWidth;
-      const viewportHeight = window.innerHeight;
-      const availableWidth = Math.min(viewportWidth * 0.7, viewportHeight * 0.4);
-      
-      const baseTileSize = Math.floor((availableWidth - 80) / boardSizeX) - 15;
-      const finalTileSize = Math.max(60, Math.min(baseTileSize, 120));
-      
-      tile.style.width = `${finalTileSize}px`;
-      tile.style.height = `${finalTileSize}px`;
+      // El tamaño se aplicará dinámicamente en renderBoard()
       
       // Eventos para móvil y escritorio
       tile.addEventListener('touchstart', (e) => {
@@ -1314,25 +1388,36 @@
       nextTileContainer.appendChild(tile);
     }
 
-    // Renderizar tablero completo
+    // Renderizar tablero completo con tamaño expandido
     function renderBoard() {
       const gameBoard = document.getElementById('gameBoard');
       gameBoard.innerHTML = '';
       
-      // Configurar grid con tamaños dinámicos
+      // Calcular tamaño máximo aprovechando el espacio disponible
       const viewportWidth = window.innerWidth;
       const viewportHeight = window.innerHeight;
-      const availableWidth = Math.min(viewportWidth * 0.7, viewportHeight * 0.4);
       
-      const baseTileSize = Math.floor((availableWidth - 80) / boardSizeX) - 15;
-      const finalTileSize = Math.max(60, Math.min(baseTileSize, 120));
+      // Espacio disponible: ancho total menos controles (80px) y márgenes
+      const availableWidth = viewportWidth - 120;
+      // Altura disponible: total menos header (140px) y preview (80px) y márgenes
+      const availableHeight = viewportHeight - 250;
       
-      gameBoard.style.gridTemplateColumns = `repeat(${boardSizeX}, ${finalTileSize}px)`;
-      gameBoard.style.gridTemplateRows = `repeat(${boardSizeY}, ${finalTileSize}px)`;
+      // Calcular tamaño de celda basado en limitaciones
+      const maxTileSizeByWidth = Math.floor((availableWidth - 60) / boardSizeX) - 12;
+      const maxTileSizeByHeight = Math.floor((availableHeight - 60) / boardSizeY) - 12;
+      
+      // Usar el menor de los dos para que quepa todo
+      const tileSize = Math.max(80, Math.min(maxTileSizeByWidth, maxTileSizeByHeight, 150));
+      
+      gameBoard.style.gridTemplateColumns = `repeat(${boardSizeX}, ${tileSize}px)`;
+      gameBoard.style.gridTemplateRows = `repeat(${boardSizeY}, ${tileSize}px)`;
       
       for (let i = 0; i < boardSizeY; i++) {
         for (let j = 0; j < boardSizeX; j++) {
           if (board[i][j] && board[i][j].element) {
+            // Actualizar tamaño de las fichas existentes
+            board[i][j].element.style.width = `${tileSize}px`;
+            board[i][j].element.style.height = `${tileSize}px`;
             gameBoard.appendChild(board[i][j].element);
           }
         }

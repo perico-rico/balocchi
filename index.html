@@ -639,7 +639,7 @@ display: grid;
 
        <!-- Logo central -->
        <div class="logo-section">
-         <div class="logo-placeholder">Gema2usion</div>
+         <div class="logo-placeholder">Gema3usion</div>
        </div>
 
        <!-- Próxima ficha y puntuación (derecha) -->
@@ -1473,18 +1473,43 @@ display: grid;
     }
 
     // Actualizar display del récord a superar
-    function updateRecordDisplay() {
-      const recordElement = document.getElementById('recordToBeaten');
-      const record = getRecordToBeaten();
-      
-      if (record) {
-        recordElement.textContent = record.score.toLocaleString();
-        recordElement.style.color = '#ffa500';
-      } else {
-        recordElement.textContent = '¡Nuevo récord!';
-        recordElement.style.color = '#4fd1c5';
-      }
-    }
+	function updateRecordDisplay() {
+	  const recordElement = document.getElementById('recordToBeaten');
+	  const modalityKey = getModalityKey();
+	  const records = getRecords(modalityKey);
+	  
+	  // Filtrar récords con puntuación > 0
+	  const validRecords = records.filter(record => record.score > 0);
+	  
+	  if (validRecords.length === 0) {
+		// No hay récords válidos
+		recordElement.innerHTML = '<span style="font-size: 10px;">Sin récords</span><br><span>0</span>';
+		recordElement.style.color = '#a0aec0';
+		return;
+	  }
+	  
+	  if (score === 0) {
+		// Partida nueva - mostrar récord más bajo
+		const lowestRecord = validRecords[validRecords.length - 1]; // Ya están ordenados desc
+		const position = validRecords.length;
+		recordElement.innerHTML = `<span style="font-size: 10px;">${position}º récord</span><br><span>${lowestRecord.score.toLocaleString()}</span>`;
+		recordElement.style.color = '#ffa500';
+	  } else {
+		// Partida en curso - mostrar próximo récord a superar
+		const betterRecords = validRecords.filter(record => record.score > score);
+		
+		if (betterRecords.length === 0) {
+		  recordElement.innerHTML = '<span style="font-size: 10px;">¡Nuevo récord!</span><br><span>🏆</span>';
+		  recordElement.style.color = '#4fd1c5';
+		} else {
+		  const nextRecord = betterRecords[betterRecords.length - 1]; // El más bajo de los superiores
+		  const currentPosition = validRecords.length - betterRecords.length + 1;
+		  recordElement.innerHTML = `<span style="font-size: 10px;">${currentPosition}º récord</span><br><span>${nextRecord.score.toLocaleString()}</span>`;
+		  recordElement.style.color = '#ffa500';
+		}
+	  }
+	}
+
 
     // Actualizar display del nivel actual
     function updateLevelDisplay() {

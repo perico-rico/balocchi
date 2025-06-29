@@ -307,27 +307,25 @@ display: grid;
       border: 2px solid rgba(79, 209, 197, 0.2);
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
     }
-    #optionsScreen, #gameScreen {
-      text-align: center;
-      width: 100%;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
     
-    }
 	#optionsScreen {
+	  text-align: center;
+	  width: 100%;
+	  display: flex;
+	  flex-direction: column;
+	  align-items: center;
 	  justify-content: center;
 	}
 
 	#gameScreen {
+	  text-align: center;
+	  width: 100%;
+	  flex-direction: column;
+	  align-items: center;
 	  justify-content: flex-start;
+	  display: none;
 	}
-    #optionsScreen {
-      display: flex;
-    }
-    #gameScreen {
-      display: none;
-    }
+    
     #optionsScreen select, #optionsScreen input {
       margin: 10px;
       padding: 15px;

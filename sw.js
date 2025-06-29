@@ -1,353 +1,185 @@
-const CACHE_NAME = 'gemafusion-pwa-v2.0';
-const STATIC_CACHE = 'gemafusion-static-v2.0';
-const IMAGES_CACHE = 'gemafusion-images-v2.0';
-
-// Archivos estáticos que se cachean inmediatamente
-const STATIC_FILES = [
+const CACHE_NAME = 'gemafusion-v1.5.0';
+const urlsToCache = [
   './',
   './index.html',
   './manifest.json',
-  './icon-72.png',
-  './icon-96.png',
-  './icon-128.png',
-  './icon-144.png',
-  './icon-152.png',
   './icon-192.png',
-  './icon-384.png',
-  './icon-512.png'
+  './icon-512.png',
+  // Imágenes del tema diamantes
+  './images/diamonds/d01.png',
+  './images/diamonds/d02.png',
+  './images/diamonds/d03.png',
+  './images/diamonds/d04.png',
+  './images/diamonds/d05.png',
+  './images/diamonds/d06.png',
+  './images/diamonds/d07.png',
+  './images/diamonds/d08.png',
+  './images/diamonds/d09.png',
+  './images/diamonds/d10.png',
+  // Imágenes del tema frutas
+  './images/frutas/a01.png',
+  './images/frutas/a02.png',
+  './images/frutas/a03.png',
+  './images/frutas/a04.png',
+  './images/frutas/a05.png',
+  './images/frutas/a06.png',
+  './images/frutas/a07.png',
+  './images/frutas/a08.png',
+  './images/frutas/a09.png',
+  './images/frutas/a10.png',
+  // Imágenes del tema frutas2
+  './images/frutas2/b01.png',
+  './images/frutas2/b02.png',
+  './images/frutas2/b03.png',
+  './images/frutas2/b04.png',
+  './images/frutas2/b05.png',
+  './images/frutas2/b06.png',
+  './images/frutas2/b07.png',
+  './images/frutas2/b08.png',
+  './images/frutas2/b09.png',
+  './images/frutas2/b10.png',
+  // Imágenes del tema flores
+  './images/flores/f01.png',
+  './images/flores/f02.png',
+  './images/flores/f03.png',
+  './images/flores/f04.png',
+  './images/flores/f05.png',
+  './images/flores/f06.png',
+  './images/flores/f07.png',
+  './images/flores/f08.png',
+  './images/flores/f09.png',
+  './images/flores/f10.png',
+  // Imágenes del tema vegetales
+  './images/vegeta/v01.png',
+  './images/vegeta/v02.png',
+  './images/vegeta/v03.png',
+  './images/vegeta/v04.png',
+  './images/vegeta/v05.png',
+  './images/vegeta/v06.png',
+  './images/vegeta/v07.png',
+  './images/vegeta/v08.png',
+  './images/vegeta/v09.png',
+  './images/vegeta/v10.png',
+  // Sonidos
+  './sounds/welcome.mp3',
+  './sounds/merge.wav',
+  './sounds/levelup.mp3',
+  './sounds/victory.wav',
+  './sounds/bonus.wav',
+  './sounds/undo.wav'
 ];
 
-// URLs de imágenes remotas para cachear
-const REMOTE_IMAGES = [
-      './images/d01.png',
-      './images/d02.png',
-      './images/d03.png',
-      './images/d04.png',
-      './images/d05.png',
-      './images/d06.png',
-      './images/d07.png',
-      './images/d08.png',
-      './images/d09.png',
-      './images/d10.png'
-];
-
-// Instalación del Service Worker
+// Instalar SW
 self.addEventListener('install', event => {
-  console.log('🔧 Service Worker: Instalando...');
-  
+  console.log('🔧 SW: Instalando Service Worker...');
   event.waitUntil(
-    Promise.all([
-      // Cachear archivos estáticos
-      caches.open(STATIC_CACHE).then(cache => {
-        console.log('📦 Cacheando archivos estáticos...');
-        return cache.addAll(STATIC_FILES);
-      }),
-      // Cachear imágenes remotas
-      caches.open(IMAGES_CACHE).then(cache => {
-        console.log('🖼️ Cacheando imágenes remotas...');
-        return Promise.allSettled(
-          REMOTE_IMAGES.map(url => 
-            fetch(url)
-              .then(response => {
-                if (response.ok) {
-                  return cache.put(url, response);
-                }
-                throw new Error(`Failed to fetch ${url}`);
-              })
-              .catch(error => {
-                console.warn(`⚠️ No se pudo cachear: ${url}`, error);
-              })
-          )
-        );
+    caches.open(CACHE_NAME)
+      .then(cache => {
+        console.log('📦 SW: Cache abierto');
+        return cache.addAll(urlsToCache.map(url => {
+          return new Request(url, {cache: 'reload'});
+        }));
       })
-    ]).then(() => {
-      console.log('✅ Service Worker: Instalación completada');
-      // Forzar activación inmediata
-      return self.skipWaiting();
-    })
+      .then(() => {
+        console.log('✅ SW: Todos los recursos en cache');
+        return self.skipWaiting();
+      })
+      .catch(error => {
+        console.error('❌ SW: Error cacheando recursos:', error);
+      })
   );
 });
 
-// Activación del Service Worker
+// Activar SW
 self.addEventListener('activate', event => {
-  console.log('🚀 Service Worker: Activando...');
-  
+  console.log('🚀 SW: Activando Service Worker...');
   event.waitUntil(
-    Promise.all([
-      // Limpiar cachés obsoletos
-      caches.keys().then(cacheNames => {
+    caches.keys()
+      .then(cacheNames => {
         return Promise.all(
           cacheNames.map(cacheName => {
-            if (cacheName !== STATIC_CACHE && 
-                cacheName !== IMAGES_CACHE && 
-                cacheName !== CACHE_NAME) {
-              console.log('🗑️ Eliminando caché obsoleto:', cacheName);
+            if (cacheName !== CACHE_NAME) {
+              console.log('🗑️ SW: Eliminando cache antiguo:', cacheName);
               return caches.delete(cacheName);
             }
           })
         );
-      }),
-      // Tomar control de todos los clientes
-      self.clients.claim()
-    ]).then(() => {
-      console.log('✅ Service Worker: Activación completada');
-    })
+      })
+      .then(() => {
+        console.log('✅ SW: Cache actualizado');
+        return self.clients.claim();
+      })
   );
 });
 
-// Manejo de solicitudes de red
+// Estrategia de fetch: Cache First con fallback a Network
 self.addEventListener('fetch', event => {
-  const { request } = event;
-  const url = new URL(request.url);
-
-  // Estrategia para archivos estáticos: Cache First
-  if (STATIC_FILES.some(file => request.url.includes(file))) {
+  // Solo manejar requests HTTP/HTTPS
+  if (event.request.url.startsWith('http')) {
     event.respondWith(
-      caches.match(request).then(response => {
-        if (response) {
-          return response;
-        }
-        return fetch(request).then(fetchResponse => {
-          return caches.open(STATIC_CACHE).then(cache => {
-            cache.put(request, fetchResponse.clone());
-            return fetchResponse;
-          });
-        });
-      })
-    );
-    return;
-  }
-
-  // Estrategia para imágenes remotas: Cache First con fallback
-  if (REMOTE_IMAGES.includes(request.url)) {
-    event.respondWith(
-      caches.match(request).then(response => {
-        if (response) {
-          console.log('📱 Imagen servida desde caché:', request.url);
-          return response;
-        }
-        
-        return fetch(request).then(fetchResponse => {
-          if (fetchResponse.ok) {
-            return caches.open(IMAGES_CACHE).then(cache => {
-              cache.put(request, fetchResponse.clone());
-              console.log('💾 Imagen cacheada:', request.url);
-              return fetchResponse;
-            });
+      caches.match(event.request)
+        .then(response => {
+          // Si está en cache, devolverlo
+          if (response) {
+            console.log('📦 SW: Sirviendo desde cache:', event.request.url);
+            return response;
           }
-          throw new Error('Network response was not ok');
-        }).catch(error => {
-          console.warn('⚠️ Error al cargar imagen:', request.url, error);
-          // Retornar una imagen placeholder si está disponible
-          return caches.match('./icon-192.png');
-        });
-      })
+          
+          // Si no está en cache, fetch desde red
+          console.log('🌐 SW: Fetcheando desde red:', event.request.url);
+          return fetch(event.request)
+            .then(response => {
+              // Verificar si es una respuesta válida
+              if (!response || response.status !== 200 || response.type !== 'basic') {
+                return response;
+              }
+              
+              // Clonar respuesta (solo se puede leer una vez)
+              const responseToCache = response.clone();
+              
+              // Añadir al cache para futuras requests
+              caches.open(CACHE_NAME)
+                .then(cache => {
+                  cache.put(event.request, responseToCache);
+                });
+              
+              return response;
+            })
+            .catch(error => {
+              console.warn('⚠️ SW: Error de red:', error);
+              
+              // Si es una imagen, devolver imagen placeholder
+              if (event.request.destination === 'image') {
+                return new Response(
+                  '<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg">' +
+                  '<rect width="100" height="100" fill="#2d3748"/>' +
+                  '<text x="50" y="50" text-anchor="middle" fill="white">?</text>' +
+                  '</svg>',
+                  { headers: { 'Content-Type': 'image/svg+xml' } }
+                );
+              }
+              
+              // Para otras requests, re-throw el error
+              throw error;
+            });
+        })
     );
-    return;
   }
-
-  // Estrategia para navegación: Network First con fallback a caché
-  if (request.mode === 'navigate') {
-    event.respondWith(
-      fetch(request).then(response => {
-        return response;
-      }).catch(() => {
-        return caches.match('./index.html');
-      })
-    );
-    return;
-  }
-
-  // Estrategia por defecto: Network First
-  event.respondWith(
-    fetch(request).then(response => {
-      // Si la respuesta es exitosa, cachearla
-      if (response.status === 200) {
-        const responseClone = response.clone();
-        caches.open(CACHE_NAME).then(cache => {
-          cache.put(request, responseClone);
-        });
-      }
-      return response;
-    }).catch(() => {
-      // Si la red falla, intentar servir desde caché
-      return caches.match(request);
-    })
-  );
 });
 
-// Manejo de mensajes desde el cliente
+// Manejar mensajes del cliente
 self.addEventListener('message', event => {
-  const { action, data } = event.data;
-
-  switch (action) {
-    case 'GET_CACHE_SIZE':
-      getCacheSize().then(size => {
-        event.ports[0].postMessage({ size });
-      });
-      break;
-      
-    case 'CLEAR_CACHE':
-      clearAllCaches().then(success => {
-        event.ports[0].postMessage({ success });
-      });
-      break;
-      
-    case 'UPDATE_CACHE':
-      updateCache().then(success => {
-        event.ports[0].postMessage({ success });
-      });
-      break;
-      
-    default:
-      console.warn('⚠️ Acción de mensaje no reconocida:', action);
+  console.log('💬 SW: Mensaje recibido:', event.data);
+  
+  if (event.data && event.data.type === 'SKIP_WAITING') {
+    self.skipWaiting();
+  }
+  
+  if (event.data && event.data.type === 'GET_VERSION') {
+    event.ports[0].postMessage({version: CACHE_NAME});
   }
 });
 
-// Función para obtener el tamaño del caché
-async function getCacheSize() {
-  try {
-    const cacheNames = await caches.keys();
-    let totalSize = 0;
-    
-    for (const cacheName of cacheNames) {
-      const cache = await caches.open(cacheName);
-      const requests = await cache.keys();
-      
-      for (const request of requests) {
-        const response = await cache.match(request);
-        if (response) {
-          const blob = await response.blob();
-          totalSize += blob.size;
-        }
-      }
-    }
-    
-    return Math.round(totalSize / 1024 / 1024 * 100) / 100; // MB
-  } catch (error) {
-    console.error('❌ Error calculando tamaño de caché:', error);
-    return 0;
-  }
-}
-
-// Función para limpiar todos los cachés
-async function clearAllCaches() {
-  try {
-    const cacheNames = await caches.keys();
-    await Promise.all(
-      cacheNames.map(cacheName => caches.delete(cacheName))
-    );
-    console.log('🧹 Todos los cachés eliminados');
-    return true;
-  } catch (error) {
-    console.error('❌ Error limpiando cachés:', error);
-    return false;
-  }
-}
-
-// Función para actualizar el caché
-async function updateCache() {
-  try {
-    // Forzar actualización de archivos estáticos
-    const cache = await caches.open(STATIC_CACHE);
-    await Promise.all(
-      STATIC_FILES.map(url => {
-        return fetch(url + '?v=' + Date.now())
-          .then(response => {
-            if (response.ok) {
-              return cache.put(url, response);
-            }
-            throw new Error(`Failed to update ${url}`);
-          })
-          .catch(error => {
-            console.warn(`⚠️ No se pudo actualizar: ${url}`, error);
-          });
-      })
-    );
-    
-    console.log('🔄 Caché actualizado');
-    return true;
-  } catch (error) {
-    console.error('❌ Error actualizando caché:', error);
-    return false;
-  }
-}
-
-// Manejo de sincronización en segundo plano
-self.addEventListener('sync', event => {
-  console.log('🔄 Background Sync:', event.tag);
-  
-  if (event.tag === 'game-stats-sync') {
-    event.waitUntil(syncGameStats());
-  }
-});
-
-// Función para sincronizar estadísticas del juego
-async function syncGameStats() {
-  try {
-    // Aquí podrías enviar estadísticas a un servidor si fuera necesario
-    console.log('📊 Sincronizando estadísticas del juego...');
-    
-    // Simular sincronización
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    console.log('✅ Estadísticas sincronizadas');
-  } catch (error) {
-    console.error('❌ Error sincronizando estadísticas:', error);
-    throw error; // Re-lanzar para reintento automático
-  }
-}
-
-// Notificaciones push (para futuras características)
-self.addEventListener('push', event => {
-  console.log('📬 Push recibido:', event);
-  
-  const options = {
-    body: event.data ? event.data.text() : 'Nueva actualización disponible',
-    icon: './icon-192.png',
-    badge: './icon-72.png',
-    vibrate: [100, 50, 100],
-    data: {
-      dateOfArrival: Date.now(),
-      primaryKey: 1
-    },
-    actions: [
-      {
-        action: 'explore',
-        title: 'Abrir juego',
-        icon: './icon-192.png'
-      },
-      {
-        action: 'close',
-        title: 'Cerrar',
-        icon: './icon-192.png'
-      }
-    ]
-  };
-  
-  event.waitUntil(
-    self.registration.showNotification('Gemafusion', options)
-  );
-});
-
-// Manejo de clics en notificaciones
-self.addEventListener('notificationclick', event => {
-  console.log('🔔 Notificación clickeada:', event.notification.tag);
-  
-  event.notification.close();
-  
-  if (event.action === 'explore') {
-    event.waitUntil(
-      clients.openWindow('./index.html')
-    );
-  }
-});
-
-console.log('🎮 Gemafusion Service Worker registrado correctamente');
-console.log('📱 Características del SW:');
-console.log('  • Caché inteligente de recursos');
-console.log('  • Soporte offline completo');
-console.log('  • Gestión automática de versiones');
-console.log('  • Optimización para imágenes remotas');
-console.log('  • Background sync preparado');
-console.log('  • Push notifications listo');
+// Log de información del SW
+console.log('🎮 Gemafusion Service Worker v1.5.0 iniciado');
+console.log('📊 Recursos a cachear:', urlsToCache.length);

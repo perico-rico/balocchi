@@ -530,81 +530,59 @@
         🏆 Récord Personal: <span id="highScoreValue" style="color: #4fd1c5;">0</span>
       </p>
     </div>
+	<div id="gameScreen">
+     <!-- Sección 1: Preview de niveles (horizontal, arriba) -->
+     <div class="level-preview-section">
+       <div id="levelPreview" class="level-preview-horizontal"></div>
+     </div>
 
-    <div id="gameScreen">      
-      <div class="game-header">
-        <!-- Caja 1: Espacio vacío reservado -->
-        <div class="header-empty">
-          <div style="opacity: 0.7;">Espacio reservado<br>para futuro logo</div>
-        </div>
-        
-        <!-- Caja 2: Próxima ficha -->
-        <div class="header-next">
-          <div id="nextTile"></div>
-        </div>
-        
-        <!-- Caja 5: Nivel elegido -->
-        <div class="header-level">
-          <span id="currentLevelDisplay">7</span>
-        </div>
-        
-        <!-- Caja 3: Puntuación actual -->
-        <div class="header-score">
-          <div style="color: #a0aec0; font-size: 11px; margin-bottom: 3px;">Puntuación</div>
-          <div style="font-size: 20px; font-weight: bold; color: #4fd1c5;" id="score">0</div>
-        </div>
-        
-        <!-- Caja 4: Récord a superar -->
-        <div class="header-record">
-          <div style="color: #a0aec0; font-size: 10px; margin-bottom: 2px;">A superar</div>
-          <div style="font-size: 14px; font-weight: bold; color: #ffa500;" id="recordToBeaten">-</div>
-        </div>
-      </div>
+     <!-- Sección 2: Fila horizontal con controles -->
+     <div class="controls-row">
+       <!-- Botones circulares (izquierda) -->
+       <div class="controls-left">
+         <button class="btn-circular" onclick="toggleNumbers()" title="Mostrar/Ocultar números">🔢</button>
+         <button class="btn-circular bonus" id="bonusBtn" onclick="showBonusModal()" title="Cambiar próxima ficha">
+           ⭐
+           <span class="btn-counter" id="bonusCount">3</span>
+         </button>
+         <button class="btn-circular bonus" id="undoBtn" onclick="undoMove()" title="Deshacer movimiento">
+           ↶
+           <span class="btn-counter" id="undoCount">3</span>
+         </button>
+         <button class="btn-circular" onclick="restartGame()" title="Nueva partida">🔄</button>
+         <button class="btn-circular" onclick="backToMenu()" title="Menú principal">🏠</button>
+         <button class="btn-circular" onclick="showRecords()" title="Ver récords">🏆</button>
+         <button class="btn-circular" onclick="exitGame()" title="Salir del juego">❌</button>
+       </div>
 
-      <!-- Caja 6: Preview niveles -->
-      <div style="margin: 15px 0; width: 100%;">
-        <div style="background: linear-gradient(135deg, #2d3748, #1a202c); border: 2px solid rgba(79, 209, 197, 0.2); border-radius: 12px; padding: 15px;">
-          <div style="color: #a0aec0; font-size: 13px; margin-bottom: 8px; text-align: center;">Niveles Disponibles</div>
-          <div id="levelPreview" class="level-preview-large"></div>
-        </div>
-      </div>
+       <!-- Logo central -->
+       <div class="logo-section">
+         <div class="logo-placeholder">Gemafusion</div>
+       </div>
 
-      <!-- Layout principal: Tablero (7) + Botones (8) -->
-      <div class="main-game-area">
-        <!-- Caja 7: Tablero de juego (más grande, desplazado izquierda) -->
-        <div class="game-board-container">
-          <div id="gameBoard"></div>
-        </div>
-        
-        <!-- Caja 8: Botones verticales (derecha) -->
-        <div class="game-buttons-vertical">
-          <button class="btn-circular" onclick="toggleNumbers()" title="Mostrar/Ocultar números">
-            🔢
-          </button>
-          <button class="btn-circular bonus" id="bonusBtn" onclick="showBonusModal()" title="Cambiar próxima ficha">
-            ⭐
-            <span class="btn-counter" id="bonusCount">3</span>
-          </button>
-          <button class="btn-circular bonus" id="undoBtn" onclick="undoMove()" title="Deshacer movimiento">
-            ↶
-            <span class="btn-counter" id="undoCount">3</span>
-          </button>
-          <button class="btn-circular" onclick="restartGame()" title="Nueva partida">
-            🔄
-          </button>
-          <button class="btn-circular" onclick="backToMenu()" title="Menú principal">
-            🏠
-          </button>
-          <button class="btn-circular" onclick="showRecords()" title="Ver récords">
-            🏆
-          </button>
-          <button class="btn-circular" onclick="exitGame()" title="Salir del juego">
-            ❌
-          </button>
-        </div>
-      </div>
-    </div>
-  </div>
+       <!-- Próxima ficha y puntuación (derecha) -->
+       <div class="controls-right">
+         <div class="next-tile-container">
+           <div id="nextTile"></div>
+           <div class="level-indicator" id="currentLevelDisplay">7</div>
+         </div>
+         <div class="score-container">
+           <div class="score-main" id="score">0</div>
+           <div class="score-record">
+             <span class="record-label">A superar</span>
+             <span class="record-value" id="recordToBeaten">-</span>
+           </div>
+         </div>
+       </div>
+     </div>
+
+     <!-- Sección 3: Tablero de juego (centrado, máximo tamaño) -->
+     <div class="game-board-section">
+       <div id="gameBoard"></div>
+     </div>
+   </div>
+
+
 
   <!-- Modales -->
   <div id="themeModal" class="modal" style="display: none;">

@@ -1361,6 +1361,11 @@
         level: newLevel, 
         element: createTileElement(newLevel, row, col) 
       };
+	  // Remover clase merged de todas las fichas anteriores
+	  document.querySelectorAll('.tile.merged').forEach(tile => tile.classList.remove('merged'));
+	  // Añadir clase merged solo a la nueva ficha fusionada
+
+
       board[row][col].element.classList.add('merged');
       
       // Actualizar nivel máximo alcanzado

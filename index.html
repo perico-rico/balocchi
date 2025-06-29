@@ -163,7 +163,7 @@
 	
 	.level-preview-section {
 	  width: 100%;
-	  margin: 15px 0;
+	  margin: 0 0 15px 0;
 	}
 
 	.level-preview-horizontal {
@@ -188,11 +188,16 @@
 	}
 
 	.controls-left {
-	  display: flex;
-	  gap: 10px;
-	  flex-wrap: wrap;
+	  display: grid;
+	  grid-template-columns: repeat(4, 1fr);
+	  gap: 8px;
+	  width: 280px;
 	}
-
+display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+  width: 280px;
+}
 	.logo-section {
 	  flex: 1;
 	  text-align: center;
@@ -212,7 +217,12 @@
 
 	.next-tile-container, .score-container {
 	  text-align: center;
+	  background: linear-gradient(135deg, #2d3748, #1a202c);
+	  border: 2px solid rgba(79, 209, 197, 0.2);
+	  border-radius: 8px;
+	  padding: 10px;
 	}
+
 
 	.game-board-section {
 	  display: flex;

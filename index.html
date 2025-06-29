@@ -228,6 +228,20 @@ display: grid;
 	  border-radius: 8px;
 	  padding: 10px;
 	}
+	.score-main {
+	font-size: 24px;
+	font-weight: bold;
+	color: #4fd1c5;
+	}
+
+	.record-display {
+	  font-size: 16px;
+	  color: #ffa500;
+	  display: flex;
+	  align-items: center;
+	  justify-content: center;
+	  gap: 5px;
+	}
 
 
 	.game-board-section {
@@ -604,7 +618,6 @@ display: grid;
       
       <button onclick="startGame()">🚀 Comenzar Partida</button>
       <button onclick="showRecords()">🏆 Ver Récords</button>
-	  <button onclick="showDebugRecords()" style="background: red; margin: 5px;">DEBUG Records</button>
       <div class="loading-indicator" id="loadingIndicator">
         <div class="loading-spinner"></div>
         Cargando recursos del juego...
@@ -649,13 +662,12 @@ display: grid;
            <div id="nextTile"></div>
            <div class="level-indicator" id="currentLevelDisplay">7</div>
          </div>
-         <div class="score-container">
-           <div class="score-main" id="score">0</div>
-           <div class="score-record">
-             <span class="record-label">A superar</span>
-             <span class="record-value" id="recordToBeaten">-</span>
-           </div>
-         </div>
+		 <div class="score-container">
+			<div class="score-main" id="score">0</div>
+		 </div>
+		 <div class="score-container">
+			<div class="record-display" id="recordToBeaten">🏆 0</div>
+		 </div>
        </div>
      </div>
 
@@ -1484,7 +1496,7 @@ display: grid;
 	  
 	  if (validRecords.length === 0) {
 		// No hay récords válidos
-		recordElement.innerHTML = '<span style="font-size: 10px;">Sin récords</span><br><span>0</span>';
+		recordElement.textContent = '🏆 0';
 		recordElement.style.color = '#a0aec0';
 		return;
 	  }
@@ -1493,19 +1505,19 @@ display: grid;
 		// Partida nueva - mostrar récord más bajo
 		const lowestRecord = validRecords[validRecords.length - 1]; // Ya están ordenados desc
 		const position = validRecords.length;
-		recordElement.innerHTML = `<span style="font-size: 10px;">${position}º récord</span><br><span>${lowestRecord.score.toLocaleString()}</span>`;
+		recordElement.textContent = `🏆 ${position}º ${lowestRecord.score.toLocaleString()}`;
 		recordElement.style.color = '#ffa500';
 	  } else {
 		// Partida en curso - mostrar próximo récord a superar
 		const betterRecords = validRecords.filter(record => record.score > score);
 		
 		if (betterRecords.length === 0) {
-		  recordElement.innerHTML = '<span style="font-size: 10px;">¡Nuevo récord!</span><br><span>🏆</span>';
+		  recordElement.textContent = '🏆 ¡Nuevo récord!';
 		  recordElement.style.color = '#4fd1c5';
 		} else {
 		  const nextRecord = betterRecords[betterRecords.length - 1]; // El más bajo de los superiores
 		  const currentPosition = validRecords.length - betterRecords.length + 1;
-		  recordElement.innerHTML = `<span style="font-size: 10px;">${currentPosition}º récord</span><br><span>${nextRecord.score.toLocaleString()}</span>`;
+		  recordElement.textContent = `🏆 ${currentPosition}º ${nextRecord.score.toLocaleString()}`;
 		  recordElement.style.color = '#ffa500';
 		}
 	  }
@@ -1671,25 +1683,6 @@ display: grid;
         timeout = setTimeout(later, wait);
       };
     }
-	function showDebugRecords() {
-	  const modalityKey = getModalityKey();
-	  const records = getRecords(modalityKey);
-	  const allKeys = Object.keys(localStorage).filter(key => key.startsWith('records_'));
-	  
-	  let debug = `Modalidad actual: ${modalityKey}\n`;
-	  debug += `Records en esta modalidad: ${records.length}\n\n`;
-	  
-	  records.forEach((record, i) => {
-		debug += `${i+1}: ${record.player} - ${record.score} pts - ${record.date}\n`;
-	  });
-	  
-	  debug += `\nTodas las modalidades guardadas:\n`;
-	  allKeys.forEach(key => {
-		debug += `${key}\n`;
-	  });
-	  
-	  alert(debug);
-	}
 
     // Probabilidades utilizadas en el sistema de generación
     console.log('📊 Sistema de probabilidades implementado:');

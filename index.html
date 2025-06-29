@@ -163,7 +163,8 @@
 	
 	.level-preview-section {
 	  width: 100%;
-	  margin: 0 0 15px 0;
+	  margin: 0;
+	  padding-top: 0;
 	}
 
 	.level-preview-horizontal {
@@ -189,10 +190,15 @@
 
 	.controls-left {
 	  display: grid;
-	  grid-template-columns: repeat(4, 1fr);
+	  grid-template-columns: repeat(4, 60px);
+	  grid-template-rows: repeat(2, 60px);
 	  gap: 8px;
 	  width: 280px;
 	}
+	.controls-left button:nth-child(5) { grid-column: 1 / 2; grid-row: 2; margin-left: 34px; }
+	.controls-left button:nth-child(6) { grid-column: 2 / 3; grid-row: 2; }
+	.controls-left button:nth-child(7) { grid-column: 3 / 4; grid-row: 2; }
+
 display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 8px;

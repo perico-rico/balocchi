@@ -199,11 +199,8 @@
 	.controls-left button:nth-child(6) { grid-column: 2 / 3; grid-row: 2; margin-left: 34px; }
 	.controls-left button:nth-child(7) { grid-column: 3 / 4; grid-row: 2; margin-left: 34px; }
 
-display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 8px;
-  width: 280px;
-}
+
+
 	.logo-section {
 	  flex: 1;
 	  text-align: center;
@@ -227,7 +224,7 @@ display: grid;
 	  gap: 10px;
 	}
 
-	.next-tile-container, .score-container {
+	.next-tile-container {
 	  text-align: center;
 	  background: linear-gradient(135deg, #2d3748, #1a202c);
 	  border: 2px solid rgba(79, 209, 197, 0.2);
@@ -670,8 +667,6 @@ display: grid;
          </div>
 		 <div class="next-tile-container">
 			<div class="score-main" id="score">0</div>
-		 
-		 <div class="score-container">
 			<div class="record-display" id="recordToBeaten">🏆 0</div>
 		 </div>
        </div>

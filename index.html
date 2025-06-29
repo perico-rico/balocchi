@@ -604,6 +604,7 @@ display: grid;
       
       <button onclick="startGame()">🚀 Comenzar Partida</button>
       <button onclick="showRecords()">🏆 Ver Récords</button>
+	  <button onclick="showDebugRecords()" style="background: red; margin: 5px;">DEBUG Records</button>
       <div class="loading-indicator" id="loadingIndicator">
         <div class="loading-spinner"></div>
         Cargando recursos del juego...
@@ -1670,6 +1671,25 @@ display: grid;
         timeout = setTimeout(later, wait);
       };
     }
+	function showDebugRecords() {
+	  const modalityKey = getModalityKey();
+	  const records = getRecords(modalityKey);
+	  const allKeys = Object.keys(localStorage).filter(key => key.startsWith('records_'));
+	  
+	  let debug = `Modalidad actual: ${modalityKey}\n`;
+	  debug += `Records en esta modalidad: ${records.length}\n\n`;
+	  
+	  records.forEach((record, i) => {
+		debug += `${i+1}: ${record.player} - ${record.score} pts - ${record.date}\n`;
+	  });
+	  
+	  debug += `\nTodas las modalidades guardadas:\n`;
+	  allKeys.forEach(key => {
+		debug += `${key}\n`;
+	  });
+	  
+	  alert(debug);
+	}
 
     // Probabilidades utilizadas en el sistema de generación
     console.log('📊 Sistema de probabilidades implementado:');

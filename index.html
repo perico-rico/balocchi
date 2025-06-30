@@ -1344,15 +1344,15 @@
       
       // Calcular tamaño de ficha más grande aprovechando todo el espacio vertical
       const viewportHeight = window.innerHeight;
-      const headerHeight = 300; // Aproximado para cajas 1-6
-      const availableHeight = viewportHeight - headerHeight - 100; // Margen de seguridad
+      const headerHeight = 200; // Aproximado para cajas 1-6
+      const availableHeight = viewportHeight - headerHeight - 50; // Margen de seguridad
       
       // Calcular tamaño óptimo basado en altura disponible y número de filas
       const maxTileSizeByHeight = Math.floor((availableHeight - 60) / boardSizeY) - 20; // 60 padding, 20 gap
       
       // También considerar ancho disponible (dejando espacio para botones)
       const viewportWidth = window.innerWidth;
-      const availableWidth = viewportWidth * 0.75; // 75% del ancho (25% para botones y márgenes)
+      const availableWidth = viewportWidth * 0.95; // 75% del ancho (25% para botones y márgenes)
       const maxTileSizeByWidth = Math.floor((availableWidth - 60) / boardSizeX) - 20;
       
       // Usar el menor de los dos para que quepa bien
